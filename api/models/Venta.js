@@ -13,14 +13,26 @@ module.exports = (sequelize, DataTypes) => {
             carritoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Carrito',
+                    key: 'carritoId',
+                },
             },
             clienteId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Cliente',
+                    key: 'clienteId',
+                },
             },
             metodoPagoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'MetodosPago',
+                    key: 'metodoPagoId',
+                },
             },
             referencia: {
                 type: DataTypes.STRING,

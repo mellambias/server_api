@@ -13,10 +13,18 @@ module.exports = (sequelize, DataTypes) => {
             abonoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Abono',
+                    key: 'abonoId',
+                },
             },
             productoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Producto',
+                    key: 'productoId',
+                },
             },
             cantidad: {
                 type: DataTypes.INTEGER,

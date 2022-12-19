@@ -21,9 +21,18 @@ class Controller {
             );
         }
     }
-    async findAll() {
+    async findAll(options = {}) {
         try {
-            return await this.model.findAll();
+            let where = options.q
+                .split(',')
+                .map(e => JSON.stringify(e.split(':')));
+
+            options = {
+                attributes: options.c.split(','),
+                where,
+            };
+            console.log(options);
+            return await this.model.findAll(options);
         } catch (error) {
             throw new ControlerException(
                 'Recurso no disponible',

@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             categoriaId: {
                 type: DataTypes.INTEGER,
+                references: {
+                    model: 'ProductosCategoria',
+                    key: 'categoriaId',
+                },
             },
             nombre: {
                 type: DataTypes.STRING,
@@ -22,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
             },
             ivaId: {
                 type: DataTypes.INTEGER,
+                references: {
+                    model: 'Iva',
+                    key: 'ivaId',
+                },
             },
             destacado: {
                 type: DataTypes.BOOLEAN,

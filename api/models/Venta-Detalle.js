@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class CarritoDetalle extends Model {}
-    CarritoDetalle.init(
+    class VentaDetalle extends Model {}
+    VentaDetalle.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,13 +10,21 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            carritoId: {
+            ventaId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Venta',
+                    key: 'ventaId',
+                },
             },
             productoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Producto',
+                    key: 'productoId',
+                },
             },
             cantidad: {
                 type: DataTypes.INTEGER.UNSIGNED,
@@ -29,10 +37,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         { sequelize, paranoid: true }
     );
-    CarritoDetalle.associate = models => {
+    VentaDetalle.associate = models => {
         // associations can be defined here
-        CarritoDetalle.belongsTo(models.Carrito, { foreignKey: 'carritoId' });
-        CarritoDetalle.belongsTo(models.Producto, { foreignKey: 'productoId' });
+        VentaDetalle.belongsTo(models.Venta, { foreignKey: 'ventaId' });
+        VentaDetalle.belongsTo(models.Producto, { foreignKey: 'productoId' });
     };
-    return CarritoDetalle;
+    return VentaDetalle;
 };

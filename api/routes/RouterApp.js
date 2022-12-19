@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const Controller = require('../controllers/Controller');
 const ControlerException = require('../utils/ControlerException');
+const cors = require('cors');
+const corsOptions = require('../utils/serverCors');
 
 class RouterApp {
     router = Router();
@@ -18,9 +20,8 @@ class RouterApp {
         });
         // obtener todos los recursos
         this.router.get('/', async (req, res) => {
-            console.log(this.controler);
             try {
-                const data = await this.controler.findAll();
+                const data = await this.controler.findAll(req.query);
                 res.status(200).send(data);
             } catch (error) {
                 res.status(400).send(`Se ha producido un error ${error}`);
@@ -40,6 +41,7 @@ class RouterApp {
             }
         });
         // sustituye un recurso por otro.
+        this.router.options('/:id', cors(corsOptions));
         this.router.put('/:id', async (req, res) => {
             try {
                 const data = await this.controler.updateOne(
@@ -52,6 +54,7 @@ class RouterApp {
             }
         });
         // modifica campos de un recurso.
+        this.router.options('/:id', cors(corsOptions));
         this.router.patch('/:id', async (req, res) => {
             try {
                 const data = await this.controler.patchOne(
@@ -64,6 +67,7 @@ class RouterApp {
             }
         });
         // elimina un recurso.
+        this.router.options('/:id', cors(corsOptions));
         this.router.delete('/:id', async (req, res) => {
             try {
                 const data = await this.controler.deleteOne(req.params.id);

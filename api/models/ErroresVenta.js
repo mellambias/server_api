@@ -13,16 +13,28 @@ module.exports = (sequelize, DataTypes) => {
             metodoPagoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'MetodosPago',
+                    key: 'metodoPagoId',
+                },
             },
             clienteId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: true,
+                references: {
+                    model: 'Cliente',
+                    key: 'clienteId',
+                },
             },
             carritoId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: true,
+                references: {
+                    model: 'Carrito',
+                    key: 'carritoId',
+                },
             },
             codigoError: {
                 type: DataTypes.INTEGER,

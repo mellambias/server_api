@@ -131,7 +131,7 @@ MetodosPago.hasMany(models.Abono, { foreignKey: 'metodoPagoId' });
 Iva.hasMany(models.Producto, { foreignKey: 'ivaId' });
 ```
 
-## Cliente
+#### Cliente
 
 | campo        | tipo        |         | notNull | Auto | key     | fk  | coment                                            |
 | ------------ | ----------- | ------- | ------- | ---- | ------- | --- | ------------------------------------------------- |
@@ -217,8 +217,10 @@ Carrito.hasMany(models.ErroresVenta, { foreignKey: 'carritoId' });
 | nombreProducto | varchar      |          | notnull |      |         |     |        |
 | tipoIva        | int          |          |         |      |         |     |        |
 
+```js
 CarritoDetalle.belongsTo(models.Carrito, { foreignKey: 'carritoId' });
 CarritoDetalle.belongsTo(models.Producto, { foreignKey: 'productoId' });
+```
 
 ## Ventas
 

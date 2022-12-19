@@ -13,10 +13,18 @@ module.exports = (sequelize, DataTypes) => {
             clienteId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Cliente',
+                    key: 'clienteId',
+                },
             },
             fingerprintId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                references: {
+                    model: 'Fingerprint',
+                    key: 'fingerprintId',
+                },
             },
         },
         { sequelize, paranoid: true }

@@ -18,7 +18,14 @@ module.exports = (sequelize, DataTypes) => {
             telefono: { type: DataTypes.STRING(20), allowNull: false },
             email: { type: DataTypes.STRING, allowNull: false },
             mensaje: { type: DataTypes.TEXT, allowNull: false },
-            fingerprintId: { type: DataTypes.INTEGER, allowNull: false },
+            fingerprintId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                references: {
+                    model: 'Fingerprint',
+                    key: 'fingerprintId',
+                },
+            },
         },
         { sequelize, paranoid: true }
     );
