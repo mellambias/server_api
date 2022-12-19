@@ -1,7 +1,7 @@
 const db = require('./api/models');
 const express = require('express');
 const RouterApp = require('./api/routes/RouterApp');
-const RouterMetodosPago = require('./api/routes/MetodosPago');
+const RouterPaymentMethod = require('./api/routes/Payment-Method');
 
 const app = express();
 
@@ -19,7 +19,7 @@ async function serverInit(sequelize) {
          */
         if (ENV === 'development') {
             console.log('- Sincronizando tablas y relaciones');
-            await db.sequelize.sync({ update: true });
+            await db.sequelize.sync({ force: true });
             console.log('- Ok, tablas sincronizadas');
         }
         console.log('Configurando servidor HTTP:');
@@ -29,16 +29,16 @@ async function serverInit(sequelize) {
 
         // endpoint controllers
         console.log('- Configurando enrutadores');
-        app.use('/api/admin/abonos', new RouterApp(db.Abono));
-        app.use('/api/admin/abonos-detalle', new RouterApp(db.AbonosDetalle));
-        app.use('/api/admin/carrito', new RouterApp(db.Carrito));
+        app.use('/api/admin/Refunds', new RouterApp(db.Refund));
+        app.use('/api/admin/Refunds-detalle', new RouterApp(db.RefundDetail));
+        app.use('/api/admin/ShoppingCart', new RouterApp(db.ShoppingCart));
         app.use('/api/admin/taxes', new RouterApp(db.Taxe));
-        app.use('/api/admin/cliente', new RouterApp(db.Cliente));
+        app.use('/api/admin/Customer', new RouterApp(db.Customer));
         app.use(
             '/api/admin/metodos-pago',
-            new RouterMetodosPago(db.MetodosPago)
+            new RouterPaymentMethod(db.PaymentMethod)
         );
-        app.use('/api/admin/contacto', new RouterApp(db.Contacto));
+        app.use('/api/admin/Contact', new RouterApp(db.Contact));
         app.use('/api/admin/slider', new RouterApp(db.Slider));
 
         // default endpoint

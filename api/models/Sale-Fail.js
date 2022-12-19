@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class ErroresVenta extends Model {}
-    ErroresVenta.init(
+    class SaleFail extends Model {}
+    SaleFail.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,38 +10,27 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            metodoPagoId: {
+            paymentMethodId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                references: {
-                    model: 'MetodosPago',
-                    key: 'metodoPagoId',
-                },
             },
-            clienteId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                defaultValue: true,
-                references: {
-                    model: 'Cliente',
-                    key: 'clienteId',
-                },
-            },
-            carritoId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                defaultValue: true,
-                references: {
-                    model: 'Carrito',
-                    key: 'carritoId',
-                },
-            },
-            codigoError: {
+            customerId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: true,
             },
-            mensajeError: {
+            shoppingCartId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: true,
+            },
+            errorCode: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: true,
+            },
+
+            errorMessage: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 defaultValue: true,
@@ -49,13 +38,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         { sequelize, paranoid: true }
     );
-    ErroresVenta.associate = models => {
+    SaleFail.associate = models => {
         // associations can be defined here
-        ErroresVenta.belongsTo(models.MetodosPago, {
-            foreignKey: 'metodoPagoId',
+        SaleFail.belongsTo(models.PaymentMethod, {
+            foreignKey: 'paymentMethodId',
         });
-        ErroresVenta.belongsTo(models.Cliente, { foreignKey: 'clienteId' });
-        ErroresVenta.belongsTo(models.Carrito, { foreignKey: 'carritoId' });
+        SaleFail.belongsTo(models.Customer, { foreignKey: 'customerId' });
+        SaleFail.belongsTo(models.ShoppingCart, {
+            foreignKey: 'shoppingCartId',
+        });
     };
-    return ErroresVenta;
+    return SaleFail;
 };

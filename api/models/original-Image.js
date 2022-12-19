@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class ImagenesConfiguracion extends Model {}
-    ImagenesConfiguracion.init(
+    class OriginalImage extends Model {}
+    OriginalImage.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,15 +10,23 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
+            path: {
+                type: DataTypes.STRING,
+                allowNull: false,
+            },
             entity: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            directory: {
-                type: DataTypes.STRING,
+            entityId: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            type: {
+            languageAlias: {
+                type: DataTypes.STRING(2),
+                allowNull: false,
+            },
+            filename: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
@@ -26,36 +34,27 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            grid: {
-                type: DataTypes.ENUM,
-                values: ['desktop', 'mobile', 'preview'],
-                allowNull: false,
-            },
-            contentAccepted: {
+            mimeType: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            extensionConversion: {
-                type: DataTypes.STRING(4),
+            sizeBytes: {
+                type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
             },
             widthPx: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
             },
             heightPx: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            quality: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
             },
         },
         { sequelize, paranoid: true }
     );
-    ImagenesConfiguracion.associate = models => {
+    OriginalImage.associate = models => {
         // associations can be defined here
     };
-    return ImagenesConfiguracion;
+    return OriginalImage;
 };

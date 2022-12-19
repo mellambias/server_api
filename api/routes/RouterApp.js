@@ -8,23 +8,13 @@ class RouterApp {
     router = Router();
     constructor(model, controllerClass = Controller) {
         this.controler = new controllerClass(model);
-        // crear un nuevo recurso
-        this.router.post('/', async (req, res) => {
-            const data = req.body;
-            try {
-                const newTax = await this.controler.create(data);
-                res.status(200).send(newTax);
-            } catch (error) {
-                res.status(400).send(error.message);
-            }
-        });
         // obtener todos los recursos
         this.router.get('/', async (req, res) => {
             try {
                 const data = await this.controler.findAll(req.query);
                 res.status(200).send(data);
             } catch (error) {
-                res.status(400).send(`Se ha producido un error ${error}`);
+                res.status(400).send(`${error.message}`);
             }
         });
         //recupera informacion de un recurso por su id
@@ -38,6 +28,16 @@ class RouterApp {
                 } else {
                     res.status(400).send(error);
                 }
+            }
+        });
+        // crear un nuevo recurso
+        this.router.post('/', async (req, res) => {
+            const data = req.body;
+            try {
+                const newElement = await this.controler.create(data);
+                res.status(200).send(newElement);
+            } catch (error) {
+                res.status(400).send(error.message);
             }
         });
         // sustituye un recurso por otro.

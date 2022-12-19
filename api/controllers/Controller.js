@@ -1,5 +1,5 @@
 const ControlerException = require('../utils/ControlerException');
-const { ValidationError } = require('sequelize');
+const { ValidationError, Op } = require('sequelize');
 
 /*
  *   Clase controladora
@@ -22,17 +22,22 @@ class Controller {
         }
     }
     async findAll(options = {}) {
+        let params = {};
         try {
-            let where = options.q
-                .split(',')
-                .map(e => JSON.stringify(e.split(':')));
+            if (options.hasOwnProperty('c')) {
+                params.attributes = options.c.split(',');
+            }
+            if (options.hasOwnProperty('q')) {
+                params.where = options.q.split(',');
+                params.where = params.where.map(e => {
+                    let p = {};
+                    const [key, value] = e.split(':');
+                    p[key] = value;
+                    return p;
+                });
+            }
 
-            options = {
-                attributes: options.c.split(','),
-                where,
-            };
-            console.log(options);
-            return await this.model.findAll(options);
+            return await this.model.findAll(params);
         } catch (error) {
             throw new ControlerException(
                 'Recurso no disponible',
@@ -61,8 +66,7 @@ class Controller {
             await newObject.validate();
             const current = await this.findOne(id);
             current.set(newObject.dataValues);
-            const result = await current.save();
-            return result;
+            return await current.save();
         } catch (error) {
             if (error instanceof ValidationError) {
                 throw new ControlerException(
@@ -78,9 +82,8 @@ class Controller {
 
     async patchOne(id, value) {
         try {
-            const tax = await this.findOne(id);
-            const result = await tax.update(value);
-            return result;
+            const actual = await this.findOne(id);
+            return await actual.update(value);
         } catch (error) {
             if (error instanceof ValidationError) {
                 throw new ControlerException(
@@ -95,9 +98,8 @@ class Controller {
     }
     async deleteOne(id) {
         try {
-            const tax = await this.findOne(id);
-            const result = await tax.destroy();
-            return result;
+            const actual = await this.findOne(id);
+            return await actual.destroy();
         } catch (error) {
             throw new ControlerException(
                 'Problemas al borrar el registro',

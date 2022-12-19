@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            clientId: {
+            customerId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -23,9 +23,11 @@ module.exports = (sequelize, DataTypes) => {
     );
     Fingerprint.associate = models => {
         // associations can be defined here
-        Fingerprint.hasMany(models.Carrito, { foreignKey: 'fingerprintId' });
-        Fingerprint.belongsTo(models.Cliente, { foreignKey: 'clientId' });
-        Fingerprint.hasOne(models.Contacto, { foreignKey: 'fingerprintId' });
+        Fingerprint.hasMany(models.ShoppingCart, {
+            foreignKey: 'fingerprintId',
+        });
+        Fingerprint.belongsTo(models.Customer, { foreignKey: 'customerId' });
+        Fingerprint.hasOne(models.Contact, { foreignKey: 'fingerprintId' });
     };
     return Fingerprint;
 };

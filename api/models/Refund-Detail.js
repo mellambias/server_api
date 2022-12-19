@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class AbonosDetalle extends Model {}
-    AbonosDetalle.init(
+    class RefundDetail extends Model {}
+    RefundDetail.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,49 +10,41 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            abonoId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'Abono',
-                    key: 'abonoId',
-                },
-            },
-            productoId: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                references: {
-                    model: 'Producto',
-                    key: 'productoId',
-                },
-            },
-            cantidad: {
+            RefundId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            precio: {
+            productId: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            amount: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            price: {
                 type: DataTypes.DECIMAL(6, 2).UNSIGNED,
                 allowNull: false,
             },
-            unidadMedida: {
+            unitMesasure: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            nombreProducto: {
+            productName: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            tipoIva: {
+            vatType: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
         },
         { sequelize, paranoid: true }
     );
-    AbonosDetalle.associate = models => {
+    RefundDetail.associate = models => {
         // associations can be defined here
-        AbonosDetalle.belongsTo(models.Abono, { foreignKey: 'abonoId' });
-        AbonosDetalle.belongsTo(models.Producto, { foreignKey: 'productoId' });
+        RefundDetail.belongsTo(models.Refund, { foreignKey: 'RefundId' });
+        RefundDetail.belongsTo(models.Product, { foreignKey: 'productId' });
     };
-    return AbonosDetalle;
+    return RefundDetail;
 };

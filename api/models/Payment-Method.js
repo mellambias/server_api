@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class MetodosPago extends Model {}
-    MetodosPago.init(
+    class PaymentMethod extends Model {}
+    PaymentMethod.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            nombre: {
+            name: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
@@ -21,15 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         { sequelize, paranoid: true }
     );
-    MetodosPago.associate = models => {
+    PaymentMethod.associate = models => {
         // associations can be defined here
-        MetodosPago.hasMany(models.Venta, { foreignKey: 'metodoPagoId' });
-        MetodosPago.hasMany(models.ErroresVenta, {
-            foreignKey: 'metodoPagoId',
+        PaymentMethod.hasMany(models.Sale, { foreignKey: 'paymentMethodId' });
+        PaymentMethod.hasMany(models.SaleFail, {
+            foreignKey: 'paymentMethodId',
         });
-        MetodosPago.hasMany(models.Abono, {
-            foreignKey: 'metodoPagoId',
+        PaymentMethod.hasMany(models.Refund, {
+            foreignKey: 'paymentMethodId',
         });
     };
-    return MetodosPago;
+    return PaymentMethod;
 };

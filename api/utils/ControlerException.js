@@ -16,7 +16,7 @@ class ControlerException {
         // debug.stack = e.stack;
         let frame = e.stack.split('\n')[3]; // change to 3 for grandparent func
         debug.numeroLinea = frame.split(':').reverse()[1];
-        debug.nombreFuncion = frame.split(' ')[5];
+        debug.nameFuncion = frame.split(' ')[5];
         return debug;
     }
 }

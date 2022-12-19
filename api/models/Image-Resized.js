@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class ImagenesRedimensionada extends Model {}
-    ImagenesRedimensionada.init(
+    class ImageResized extends Model {}
+    ImageResized.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -76,8 +76,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         { sequelize, paranoid: true }
     );
-    ImagenesRedimensionada.associate = models => {
+    ImageResized.associate = models => {
         // associations can be defined here
     };
-    return ImagenesRedimensionada;
+    return ImageResized;
 };

@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class Iva extends Model {}
-    Iva.init(
+    class ProductsCategory extends Model {}
+    ProductsCategory.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,21 +10,18 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            tipo: {
-                type: DataTypes.INTEGER,
+            name: {
+                type: DataTypes.STRING,
                 allowNull: false,
-            },
-            vigente: {
-                type: DataTypes.BOOLEAN,
-                allowNull: false,
-                defaultValue: true,
             },
         },
         { sequelize, paranoid: true }
     );
-    Iva.associate = models => {
+    ProductsCategory.associate = models => {
         // associations can be defined here
-        Iva.hasMany(models.Producto, { foreignKey: 'ivaId' });
+        ProductsCategory.hasMany(models.Product, {
+            foreignKey: 'categoryId',
+        });
     };
-    return Iva;
+    return ProductsCategory;
 };
