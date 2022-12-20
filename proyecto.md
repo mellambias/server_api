@@ -1,149 +1,34 @@
-# Tablas proyecto
+# Modelos
 
-## Sliders
+## Contact
 
-| campo    | type    | notNull | Auto | key     | fk  |
-| -------- | ------- | ------- | ---- | ------- | --- |
-| sliderId | int     | notnull | X    | primary |     |
-| name     | varchar | notnull | -    | -       |     |
-
-## Language
-
-| campo      | type    | notNull | Auto | key     | fk  |
-| ---------- | ------- | ------- | ---- | ------- | --- |
-| languageId | int     | notnull | X    | primary |     |
-| name       | varchar | notnull |      |         |     |
-| alias      | char 2  | notnull |      |         |     |
-
-## Locale
-
-| campo         | type         | notNull | Auto | key     | fk  |
-| ------------- | ------------ | ------- | ---- | ------- | --- |
-| localeId      | int          | notnull | X    | primary |     |
-| languageAlias | char(2)      | notnull |      |         |     |
-| entity        | varchar      | notnull |      |         |     |
-| entityKey     | int unsigned | notnull |      |         |     |
-| key           | varchar      | notnull |      |         |     |
-| value         | varchar      |         |      |         |     |
-
-## ImageSetting
-
-| campo               | type            | notNull | Auto | key     | fk  | coment                     |
-| ------------------- | --------------- | ------- | ---- | ------- | --- | -------------------------- |
-| id                  | int             | notnull | X    | primary |     |                            |
-| entity              | varchar         | notnull |      |         |     |                            |
-| directory           | varchar         | notnull |      |         |     |                            |
-| type                | varchar         |         |      |         |     |                            |
-| content             | varchar         |         |      |         |     |                            |
-| grid                | varchar o ENUM  | notnull |      |         |     | (desktop, mobile, preview) |
-| contentAccepted     | varchar         | notnull |      |         |     | (ej: jpg/jpeg/webp)        |
-| extensionConversion | varchar(4)      | notnull |      |         |     |                            |
-| widthPx             | int(4) unsigned |         |      |         |     |                            |
-| heightPx            | int(4) unsigned |         |      |         |     |                            |
-| quality             | int(3) unsigned | notnull |      |         |     |                            |
-
-## ImagenesRedimension
-
-| campo                | type           |          | notNull | Auto | key     | fk  | coment                     |
-| -------------------- | -------------- | -------- | ------- | ---- | ------- | --- | -------------------------- |
-| id                   | int            |          | notnull | X    | primary |     |                            |
-| imageOriginalId      | int            | unsigned |         |      |         |     |                            |
-| imageConfigurationId | int            | unsigned |         |      |         |     |                            |
-| title                | varchar(150)   |          | notnull |      |         |     |                            |
-| alt                  | varchar        |          | notnull |      |         |     |                            |
-| path                 | varchar        |          | notnull |      |         |     |                            |
-| entity               | varchar        |          | notnull |      |         |     |                            |
-| entityId             | int            |          | notnull |      |         |     |                            |
-| languageAlias        | char(2)        |          | notnull |      |         |     |                            |
-| filename             | varchar        |          | notnull |      |         |     |                            |
-| content              | varchar        |          | notnull |      |         |     |                            |
-| mimeType             | varchar        |          | notnull |      |         |     |                            |
-| grid                 | varchar o enum |          | notnull |      |         |     | (desktop, mobile, preview) |
-| sizeBytes            | int            | unsigned | notnull |      |         |     |                            |
-| widthPx              | int(4)         | unsigned |         |      |         |     |                            |
-| heightPx             | int(4)         | unsigned |         |      |         |     |                            |
-| quality              | int(3)         | unsigned | notnull |      |         |     |                            |
-
-## ImagenesOrigial
-
-| campo         | type    |          | notNull | Auto | key     | fk  | coment |
-| ------------- | ------- | -------- | ------- | ---- | ------- | --- | ------ |
-| id            | int     |          | notnull | X    | primary |     |        |
-| path          | varchar |          | notnull |      |         |     |        |
-| entity        | varchar |          | notnull |      |         |     |        |
-| entityId      | int     |          | notnull |      |         |     |        |
-| languageAlias | char(2) |          | notnull |      |         |     |        |
-| filename      | varchar |          | notnull |      |         |     |        |
-| content       | varchar |          | notnull |      |         |     |        |
-| mimeType      | varchar |          | notnull |      |         |     |        |
-| sizeBytes     | int     | unsigned | notnull |      |         |     |        |
-| widthPx       | int(4)  | unsigned | notnull |      |         |     |        |
-| heightPx      | int(4)  | unsigned | notnull |      |         |     |        |
-
-## Fingerprint
-
-| campo       | type    |     | notNull | Auto | key     | fk  | coment |
-| ----------- | ------- | --- | ------- | ---- | ------- | --- | ------ |
-| id          | int     |     | notnull | X    | primary |     |        |
-| customerId  | int     |     |         |      |         | X   |        |
-| fingerprint | varchar |     | notnull |      |         |     |        |
+| campo         | type        | notNull | Auto | PK  | fk  | coment   |
+| ------------- | ----------- | ------- | ---- | --- | --- | -------- |
+| ContactId     | int         | X       | X    | X   |     |          |
+| fingerprintId | int         |         | -    | -   | x   | Opcional |
+| name          | varchar     | X       | -    | -   |     |          |
+| surnames      | varchar     | X       | -    | -   |     |          |
+| phone         | varchar(20) | X       | -    | -   |     |          |
+| email         | varchar     | X       | -    | -   |     |          |
+| message       | text        | X       | -    | -   |     |          |
 
 ```js
-Fingerprint.belongsTo(models.Customer, { foreignKey: 'customerId' });
-Fingerprint.hasMany(models.ShoppingCart, { foreignKey: 'fingerprintId' });
-Fingerprint.hasOne(models.Contact, { foreignKey: 'fingerprintId' });
+Contact.belongsTo(models.Fingerprint, { foreignKey: 'fingerprintId' });
 ```
 
-## ProductsCategory
+## Customer
 
-| campo | type    |     | notNull | Auto | key     | fk  | coment |
-| ----- | ------- | --- | ------- | ---- | ------- | --- | ------ |
-| id    | int     |     | notnull | X    | primary |     |        |
-| name  | varchar |     | notnull |      |         |     |        |
-
-```js
-ProductsCategory.hasMany(models.Product, { foreignKey: 'categoryId' });
-```
-
-## PaymentMethod
-
-| campo   | type      |     | notNull | Auto | key     | fk  | coment |
-| ------- | --------- | --- | ------- | ---- | ------- | --- | ------ |
-| id      | int       |     | notnull | X    | primary |     |        |
-| name    | varchar   |     | notnull |      |         |     |        |
-| visible | tinyint 1 |     | notnull |      |         |     |        |
-
-```js
-PaymentMethod.hasMany(models.Sale, { foreignKey: 'paymentMethodId' });
-PaymentMethod.hasMany(models.SaleFail, { foreignKey: 'paymentMethodId' });
-PaymentMethod.hasMany(models.Refund, { foreignKey: 'paymentMethodId' });
-```
-
-### Taxes
-
-| campo | type      |          | notNull | Auto | key     | fk  | coment |
-| ----- | --------- | -------- | ------- | ---- | ------- | --- | ------ |
-| id    | int       |          | notnull | X    | primary |     |        |
-| type  | int(2)    | unsigned | notnull |      |         |     |        |
-| valid | tinyint 1 |          | notnull |      |         |     |        |
-
-```js
-Taxe.hasMany(models.Product, { foreignKey: 'taxeId' });
-```
-
-#### Customer
-
-| campo          | type        |         | notNull | Auto | key     | fk  | coment                                                 |
-| -------------- | ----------- | ------- | ------- | ---- | ------- | --- | ------------------------------------------------------ |
-| id             | int         |         | X       | X    | primary |     |                                                        |
-| shoppingCartId | int         |         |         |      |         | X   | (optativo, para saber si tiene ShoppingCart pendiente) |
-| name           | varchar     | notnull |         |      |         |     |                                                        |
-| surnames       | varchar     | notnull |         |      |         |     |                                                        |
-| phone          | varchar(10) | notnull |         |      |         |     |                                                        |
-| email          | varchar     | notnull |         |      |         |     |                                                        |
-| town           | varchar     | notnull |         |      |         |     |                                                        |
-| postalCode     | char        | notnull |         |      |         |     |                                                        |
-| address        | varchar     | notnull |         |      |         |     |                                                        |
+| campo          | type        | unsigned | notNull | Auto | PK  | fk  | coment                                                 |
+| -------------- | ----------- | -------- | ------- | ---- | --- | --- | ------------------------------------------------------ |
+| id             | int         |          | X       | X    | X   |     |                                                        |
+| shoppingCartId | int         |          |         |      |     | X   | (optativo, para saber si tiene ShoppingCart pendiente) |
+| name           | varchar     |          | X       |      |     |     |                                                        |
+| surnames       | varchar     |          | X       |      |     |     |                                                        |
+| phone          | varchar(10) |          | X       |      |     |     |                                                        |
+| email          | varchar     |          | X       |      |     |     |                                                        |
+| town           | varchar     |          | X       |      |     |     |                                                        |
+| postalCode     | char        |          | X       |      |     |     |                                                        |
+| address        | varchar     |          | X       |      |     |     |                                                        |
 
 ```js
 Customer.hasMany(models.ShoppingCart, { foreignKey: 'customerId' });
@@ -153,32 +38,117 @@ Customer.hasMany(models.SaleFail, { foreignKey: 'customerId' });
 Customer.hasMany(models.Refund, { foreignKey: 'customerId' });
 ```
 
-## Contact
+## Fingerprint
 
-| campo         | type        | notNull | Auto | key     | fk  |
-| ------------- | ----------- | ------- | ---- | ------- | --- |
-| ContactId     | int         | notnull | X    | primary |     |
-| fingerprintId | int         |         | -    | -       | x   |
-| name          | varchar     | notnull | -    | -       |     |
-| surnames      | varchar     | notnull | -    | -       |     |
-| phone         | varchar(20) | notnull | -    | -       |     |
-| email         | varchar     | notnull | -    | -       |     |
-| message       | text        | notnull | -    | -       |     |
+| campo       | type    | unsigned | notNull | Auto | PK  | fk  | coment |
+| ----------- | ------- | -------- | ------- | ---- | --- | --- | ------ |
+| id          | int     |          | X       | X    | X   |     |        |
+| customerId  | int     |          |         |      |     | X   |        |
+| fingerprint | varchar |          | X       |      |     |     |        |
 
 ```js
-Contact.belongsTo(models.Fingerprint, { foreignKey: 'fingerprintId' });
+Fingerprint.belongsTo(models.Customer, { foreignKey: 'customerId' });
+Fingerprint.hasMany(models.ShoppingCart, { foreignKey: 'fingerprintId' });
+Fingerprint.hasOne(models.Contact, { foreignKey: 'fingerprintId' });
+```
+
+## ImageResized
+
+| campo                | type           | unsigned | notNull | Auto | PK  | fk  | coment                     |
+| -------------------- | -------------- | -------- | ------- | ---- | --- | --- | -------------------------- |
+| id                   | int            |          | X       | X    | X   |     |                            |
+| imageOriginalId      | int            | X        |         |      |     |     |                            |
+| imageConfigurationId | int            | X        |         |      |     |     |                            |
+| title                | varchar(150)   |          | X       |      |     |     |                            |
+| alt                  | varchar        |          | X       |      |     |     |                            |
+| path                 | varchar        |          | X       |      |     |     |                            |
+| entity               | varchar        |          | X       |      |     |     |                            |
+| entityId             | int            |          | X       |      |     |     |                            |
+| languageAlias        | char(2)        |          | X       |      |     |     |                            |
+| filename             | varchar        |          | X       |      |     |     |                            |
+| content              | varchar        |          | X       |      |     |     |                            |
+| mimeType             | varchar        |          | X       |      |     |     |                            |
+| grid                 | varchar o enum |          | X       |      |     |     | (desktop, mobile, preview) |
+| sizeBytes            | int            | X        | X       |      |     |     |                            |
+| widthPx              | int(4)         | X        |         |      |     |     |                            |
+| heightPx             | int(4)         | X        |         |      |     |     |                            |
+| quality              | int(3)         | X        | X       |      |     |     |                            |
+
+## ImageSetting
+
+| campo               | type            | notNull | Auto | PK  | fk  | coment                     |
+| ------------------- | --------------- | ------- | ---- | --- | --- | -------------------------- |
+| id                  | int             | X       | X    | X   |     |                            |
+| entity              | varchar         | X       |      |     |     |                            |
+| directory           | varchar         | X       |      |     |     |                            |
+| type                | varchar         |         |      |     |     |                            |
+| content             | varchar         |         |      |     |     |                            |
+| grid                | varchar o ENUM  | X       |      |     |     | (desktop, mobile, preview) |
+| contentAccepted     | varchar         | X       |      |     |     | (ej: jpg/jpeg/webp)        |
+| extensionConversion | varchar(4)      | X       |      |     |     |                            |
+| widthPx             | int(4) unsigned |         |      |     |     |                            |
+| heightPx            | int(4) unsigned |         |      |     |     |                            |
+| quality             | int(3) unsigned | X       |      |     |     |                            |
+
+## Language
+
+| campo      | type    | notNull | Auto | PK  | fk  | coment |
+| ---------- | ------- | ------- | ---- | --- | --- | ------ |
+| languageId | int     | X       | X    | X   |     |
+| name       | varchar | X       |      |     |     |
+| alias      | char 2  | X       |      |     |     |
+
+## Locale
+
+| campo         | type    | unsigned | notNull | Auto | PK  | fk  | coment |
+| ------------- | ------- | -------- | ------- | ---- | --- | --- | ------ |
+| localeId      | int     |          | X       | X    | X   |     |
+| languageAlias | char(2) |          | X       |      |     |     |
+| entity        | varchar |          | X       |      |     |     |
+| entityPK      | int     | X        | X       |      |     |     |
+| PK            | varchar |          | X       |      |     |     |
+| value         | varchar |          |         |      |     |     |
+
+## OriginalImage
+
+| campo         | type    | unsigned | notNull | Auto | PK  | fk  | coment |
+| ------------- | ------- | -------- | ------- | ---- | --- | --- | ------ |
+| id            | int     |          | X       | X    | X   |     |        |
+| path          | varchar |          | X       |      |     |     |        |
+| entity        | varchar |          | X       |      |     |     |        |
+| entityId      | int     |          | X       |      |     |     |        |
+| languageAlias | char(2) |          | X       |      |     |     |        |
+| filename      | varchar |          | X       |      |     |     |        |
+| content       | varchar |          | X       |      |     |     |        |
+| mimeType      | varchar |          | X       |      |     |     |        |
+| sizeBytes     | int     | X        | X       |      |     |     |        |
+| widthPx       | int(4)  | X        | X       |      |     |     |        |
+| heightPx      | int(4)  | X        | X       |      |     |     |        |
+
+## PaymentMethod
+
+| campo   | type      | unsigned | notNull | Auto | PK  | fk  | coment |
+| ------- | --------- | -------- | ------- | ---- | --- | --- | ------ |
+| id      | int       |          | X       | X    | X   |     |        |
+| name    | varchar   |          | X       |      |     |     |        |
+| visible | tinyint 1 |          | X       |      |     |     |        |
+
+```js
+PaymentMethod.hasMany(models.Sale, { foreignKey: 'paymentMethodId' });
+PaymentMethod.hasMany(models.SaleFail, { foreignKey: 'paymentMethodId' });
+PaymentMethod.hasMany(models.Refund, { foreignKey: 'paymentMethodId' });
 ```
 
 ## Product
 
-| campo       | type         |          | notNull | Auto | key     | fk  | coment |
-| ----------- | ------------ | -------- | ------- | ---- | ------- | --- | ------ |
-| productId   | int          |          | notnull | X    | primary |     |        |
-| categoryId  | int          |          |         |      |         | X   |        |
-| taxeId      | int          |          |         |      |         | X   |        |
-| name        | varchar      |          | notnull |      |         |     |        |
-| price       | decimal(6,2) | unsigned |         |      |         |     |        |
-| outstanding | tinyint(1)   |          |         |      |         |     |        |
+| campo       | type         | unsigned | notNull | Auto | PK  | fk  | coment               |
+| ----------- | ------------ | -------- | ------- | ---- | --- | --- | -------------------- |
+| productId   | int          |          | X       | X    | X   |     |                      |
+| categoryId  | int          |          | X       |      |     | X   | n:1 ProductsCategory |
+| taxeId      | int          |          | X       |      |     | X   | n:1 Taxe             |
+| name        | varchar      |          | X       |      |     |     |                      |
+| price       | decimal(6,2) | X        |         |      |     |     |                      |
+| outstanding | tinyint(1)   |          |         |      |     |     |                      |
 
 ```js
 Product.belongsTo(models.ProductsCategory, { foreignKey: 'categoryId' });
@@ -188,13 +158,142 @@ Product.hasMany(models.SaleDetail, { foreignKey: 'productId' });
 Product.hasMany(models.RefundDetail, { foreignKey: 'productId' });
 ```
 
+## ProductsCategory
+
+| campo | type    | unsigned | notNull | Auto | PK  | fk  | coment |
+| ----- | ------- | -------- | ------- | ---- | --- | --- | ------ |
+| id    | int     |          | X       | X    | X   |     |        |
+| name  | varchar |          | X       |      |     |     |        |
+
+```js
+ProductsCategory.hasMany(models.Product, { foreignKey: 'categoryId' });
+```
+
+## RefundDetail
+
+| campo        | type          | unsigned | notNull | Auto | PK  | fk  | coment      |
+| ------------ | ------------- | -------- | ------- | ---- | --- | --- | ----------- |
+| id           | int           |          | X       | X    | X   |     |             |
+| refundId     | int           |          | X       |      |     | X   | n:1 Refund  |
+| productId    | int           |          | X       |      |     | X   | n:1 Product |
+| amount       | int           |          | X       |      |     |     |             |
+| price        | decimal (6,2) | X        | X       |      |     |     |             |
+| unitMesasure | varchar       |          | X       |      |     |     |             |
+| productName  | varchar       |          | X       |      |     |     |             |
+| vatType      | int           |          |         |      |     |     |             |
+
+```js
+RefundDetail.belongsTo(models.Refund, { foreignKey: 'RefundId' });
+RefundDetail.belongsTo(models.Product, { foreignKey: 'productId' });
+```
+
+## Refunds
+
+| campo           | type           | unsigned | notNull | Auto | PK  | fk  | coment            |
+| --------------- | -------------- | -------- | ------- | ---- | --- | --- | ----------------- |
+| id              | int            |          | X       | X    | X   |     |                   |
+| saleId          | int            |          | X       |      |     | X   | n:1 Sale          |
+| customerId      | int            |          | X       |      |     | X   | n:1 Customer      |
+| paymentMethodId | int            |          | X       |      |     | X   | n:1 PaymentMethod |
+| reference       | varchar        |          | X       |      |     |     |                   |
+| totalPrice      | decimal (10,2) |          | X       |      |     |     |                   |
+| priceBaseTotal  | decimal (10,2) |          | X       |      |     |     |                   |
+| priceVatTotal   | decimal (10,2) |          | X       |      |     |     |                   |
+| issueDate       | date           |          | X       |      |     |     |                   |
+| issueTime       | time           |          | X       |      |     |     |                   |
+
+```js
+Refund.belongsTo(models.Sale, { foreignKey: 'saleId' });
+Refund.belongsTo(models.Customer, { foreignKey: 'customerId' });
+Refund.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId' });
+Refund.hasMany(models.RefundDetail, { foreignKey: 'id' });
+```
+
+## SalesDetalle
+
+| campo        | type         |          | notNull | Auto | PK  | fk  | coment |
+| ------------ | ------------ | -------- | ------- | ---- | --- | --- | ------ |
+| id           | int          |          | notnull | X    | X   |     |        |
+| saleId       | int          |          |         |      |     | X   |        |
+| productId    | int          |          |         |      |     | X   |        |
+| amount       | int          | unsigned | notnull |      |     |     |        |
+| price        | decimal(6,2) | unsigned | notnull |      |     |     |        |
+| unitMesasure | varchar      |          | notnull |      |     |     |        |
+| productName  | varchar      |          | notnull |      |     |     |        |
+| vatType      | int          |          |         |      |     |     |        |
+
+```js
+SaleDetail.belongsTo(models.Sale, { foreignKey: 'saleId' });
+SaleDetail.belongsTo(models.Product, { foreignKey: 'productId' });
+```
+
+## SaleFail
+
+| campo           | type    | unsigned | notNull | Auto | PK  | fk  | coment            |
+| --------------- | ------- | -------- | ------- | ---- | --- | --- | ----------------- |
+| id              | int     |          | X       | X    | X   |     |                   |
+| paymentMethodId | int     |          | X       |      |     | X   | n:1 PaymentMethod |
+| customerId      | int     |          | X       |      |     | X   | n:1 Customer      |
+| shoppingCartId  | int     |          | X       |      |     | X   | n:1 ShoppingCart  |
+| errorCode       | int(5)  | X        | X       |      |     |     |                   |
+| errorMessage    | varchar |          |         |      |     |     |                   |
+
+```js
+SaleFail.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId' });
+SaleFail.belongsTo(models.Customer, { foreignKey: 'customerId' });
+SaleFail.belongsTo(models.ShoppingCart, { foreignKey: 'shoppingCartId' });
+```
+
+## Sales
+
+| campo           | type           | unsigned | notNull | Auto | PK  | fk  | coment            |
+| --------------- | -------------- | -------- | ------- | ---- | --- | --- | ----------------- |
+| id              | int            |          | X       | X    | X   |     |                   |
+| customerId      | int            |          | X       |      |     | X   | n:1 Customer      |
+| shoppingCartId  | int            |          | X       |      |     | X   | n:1 ShoppingCart  |
+| paymentMethodId | int            |          | X       |      |     | X   | n:1 PaymentMethod |
+| reference       | varchar        |          | X       |      |     |     |                   |
+| totalPrice      | decimal(10,2)  | X        | X       |      |     |     |                   |
+| priceBaseTotal  | decimal (10,2) | X        | X       |      |     |     |                   |
+| priceVatTotal   | decimal (10,2) | X        | X       |      |     |     |                   |
+| issueDate       | date           |          | X       |      |     |     |                   |
+| issueTime       | time           |          | X       |      |     |     |                   |
+
+```js
+Sale.belongsTo(models.Customer, { foreignKey: 'customerId' });
+Sale.belongsTo(models.ShoppingCart, { foreignKey: 'shoppingCartId' });
+Sale.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId' });
+Sale.hasMany(models.SaleDetail, { foreignKey: 'saleId' });
+Sale.hasMany(models.Refund, { foreignKey: 'saleId' });
+```
+
+## ShoppingCartDetail
+
+| campo          | type         | unsigned | notNull | Auto | PK  | fk  | coment           |
+| -------------- | ------------ | -------- | ------- | ---- | --- | --- | ---------------- |
+| id             | int          |          | X       | X    | X   |     |                  |
+| shoppingCartId | int          |          | X       |      |     | X   | n:1 ShoppingCart |
+| productId      | int          |          | X       |      |     | X   | n:1 Product      |
+| amount         | int          | X        | X       |      |     |     |                  |
+| price          | decimal(6,2) | X        | X       |      |     |     |                  |
+| unitMesasure   | varchar 10   |          | X       |      |     |     |                  |
+| productName    | varchar      |          | X       |      |     |     |                  |
+| vatType        | int          |          |         |      |     |     |                  |
+
+```js
+ShoppingCartDetail.belongsTo(models.ShoppingCart, {
+    foreignKey: 'shoppingCartId',
+});
+ShoppingCartDetail.belongsTo(models.Product, { foreignKey: 'productId' });
+```
+
 ## ShoppingCart
 
-| campo          | type |     | notNull | Auto | key     | fk  | coment |
-| -------------- | ---- | --- | ------- | ---- | ------- | --- | ------ |
-| shoppingCartId | int  |     | notnull | X    | primary |     |        |
-| customerId     | int  |     |         |      |         | X   |        |
-| fingerprintId  | int  |     |         |      |         | X   |        |
+| campo          | type | unsigned | notNull | Auto | PK  | fk  | coment          |
+| -------------- | ---- | -------- | ------- | ---- | --- | --- | --------------- |
+| shoppingCartId | int  |          | X       | X    | X   |     |                 |
+| customerId     | int  |          |         |      |     | X   | n:0,1 Customer  |
+| fingerprintId  | int  |          | X       |      |     | X   | n:1 Fingerprint |
 
 ```js
 ShoppingCart.belongsTo(models.Customer, { foreignKey: 'customerId' });
@@ -206,120 +305,21 @@ ShoppingCart.hasMany(models.Sale, { foreignKey: 'shoppingCartId' });
 ShoppingCart.hasMany(models.SaleFail, { foreignKey: 'shoppingCartId' });
 ```
 
-## ShoppingCartDetail
+## Slider
 
-| campo          | type         |          | notNull | Auto | key     | fk  | coment |
-| -------------- | ------------ | -------- | ------- | ---- | ------- | --- | ------ |
-| id             | int          |          | notnull | X    | primary |     |        |
-| shoppingCartId | int          |          |         |      |         | X   |        |
-| productId      | int          |          |         |      |         | X   |        |
-| amount         | int          | unsigned | notnull |      |         |     |        |
-| price          | decimal(6,2) | unsigned | notnull |      |         |     |        |
-| unitMesasure   | varchar 10   |          | notnull |      |         |     |        |
-| productName    | varchar      |          | notnull |      |         |     |        |
-| vatType        | int          |          |         |      |         |     |        |
+| campo    | type    | notNull | Auto | PK  | fk  | coment |
+| -------- | ------- | ------- | ---- | --- | --- | ------ |
+| sliderId | int     | X       | X    | X   |     |
+| name     | varchar | X       | -    | -   |     |
 
-```js
-ShoppingCartDetail.belongsTo(models.ShoppingCart, {
-    foreignKey: 'shoppingCartId',
-});
-ShoppingCartDetail.belongsTo(models.Product, { foreignKey: 'productId' });
-```
+## Taxe
 
-## Sales
-
-| campo           | type           |          | notNull | Auto | key     | fk  | coment |
-| --------------- | -------------- | -------- | ------- | ---- | ------- | --- | ------ |
-| id              | int            |          | notnull | X    | primary |     |        |
-| customerId      | int            |          |         |      |         | X   |        |
-| shoppingCartId  | int            |          |         |      |         | X   |        |
-| paymentMethodId | int            |          |         |      |         | X   |        |
-| reference       | varchar        |          | notnull |      |         |     |        |
-| totalPrice      | decimal(10,2)  | unsigned | notnull |      |         |     |        |
-| priceBaseTotal  | decimal (10,2) | unsigned | notnull |      |         |     |        |
-| priceVatTotal   | decimal (10,2) | unsigned | notnull |      |         |     |        |
-| issueDate       | date           |          | notnull |      |         |     |        |
-| issueTime       | time           |          | notnull |      |         |     |        |
+| campo | type      | unsigned | notNull | Auto | PK  | fk  | coment |
+| ----- | --------- | -------- | ------- | ---- | --- | --- | ------ |
+| id    | int       |          | X       | X    | X   |     |        |
+| type  | int(2)    | X        | X       |      |     |     |        |
+| valid | tinyint 1 |          | X       |      |     |     |        |
 
 ```js
-Sale.belongsTo(models.Customer, { foreignKey: 'customerId' });
-Sale.belongsTo(models.ShoppingCart, { foreignKey: 'shoppingCartId' });
-Sale.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId' });
-Sale.hasMany(models.SaleDetail, { foreignKey: 'saleId' });
-Sale.hasMany(models.Refund, { foreignKey: 'saleId' });
-```
-
-### SalesDetalle
-
-| campo        | type         |          | notNull | Auto | key     | fk  | coment |
-| ------------ | ------------ | -------- | ------- | ---- | ------- | --- | ------ |
-| id           | int          |          | notnull | X    | primary |     |        |
-| saleId       | int          |          |         |      |         | X   |        |
-| productId    | int          |          |         |      |         | X   |        |
-| amount       | int          | unsigned | notnull |      |         |     |        |
-| price        | decimal(6,2) | unsigned | notnull |      |         |     |        |
-| unitMesasure | varchar      |          | notnull |      |         |     |        |
-| productName  | varchar      |          | notnull |      |         |     |        |
-| vatType      | int          |          |         |      |         |     |        |
-
-```js
-SaleDetail.belongsTo(models.Sale, { foreignKey: 'saleId' });
-SaleDetail.belongsTo(models.Product, { foreignKey: 'productId' });
-```
-
-## SaleFail
-
-| campo           | type    |          | notNull | Auto | key     | fk  | coment |
-| --------------- | ------- | -------- | ------- | ---- | ------- | --- | ------ |
-| id              | int     |          | notnull | X    | primary |     |        |
-| paymentMethodId | int     |          | notnull |      |         | X   |        |
-| customerId      | int     |          | notnull |      |         | X   |        |
-| shoppingCartId  | int     |          | notnull |      |         | X   |        |
-| errorCode       | int(5)  | unsigned | notnull |      |         |     |        |
-| errorMessage    | varchar |          |         |      |         |     |        |
-
-```js
-SaleFail.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId' });
-SaleFail.belongsTo(models.Customer, { foreignKey: 'customerId' });
-SaleFail.belongsTo(models.ShoppingCart, { foreignKey: 'shoppingCartId' });
-```
-
-## Refunds
-
-| campo           | type           |     | notNull | Auto | key     | fk  | coment |
-| --------------- | -------------- | --- | ------- | ---- | ------- | --- | ------ |
-| id              | int            |     | notnull | X    | primary |     |        |
-| saleId          | int            |     |         |      |         | X   |        |
-| customerId      | int            |     |         |      |         | X   |        |
-| paymentMethodId | int            |     |         |      |         | X   |        |
-| reference       | varchar        |     | notnull |      |         |     |        |
-| totalPrice      | decimal (10,2) |     | notnull |      |         |     |        |
-| priceBaseTotal  | decimal (10,2) |     | notnull |      |         |     |        |
-| priceVatTotal   | decimal (10,2) |     | notnull |      |         |     |        |
-| issueDate       | date           |     | notnull |      |         |     |        |
-| issueTime       | time           |     | notnull |      |         |     |        |
-
-```js
-Refund.belongsTo(models.Sale, { foreignKey: 'saleId' });
-Refund.belongsTo(models.Customer, { foreignKey: 'customerId' });
-Refund.belongsTo(models.PaymentMethod, { foreignKey: 'paymentMethodId' });
-Refund.hasMany(models.RefundDetail, { foreignKey: 'id' });
-```
-
-### RefundDetail
-
-| campo        | type          |          | notNull | Auto | key     | fk  | coment |
-| ------------ | ------------- | -------- | ------- | ---- | ------- | --- | ------ |
-| id           | int           |          | notnull | X    | primary |     |        |
-| id           | int           |          |         |      |         | X   |        |
-| productId    | int           |          |         |      |         | X   |        |
-| amount       | int           |          | notnull |      |         |     |        |
-| price        | decimal (6,2) | unsigned | notnull |      |         |     |        |
-| unitMesasure | varchar       |          | notnull |      |         |     |        |
-| productName  | varchar       |          | notnull |      |         |     |        |
-| vatType      | int           |          |         |      |         |     |        |
-
-```js
-RefundDetail.belongsTo(models.Refund, { foreignKey: 'id' });
-RefundDetail.belongsTo(models.Product, { foreignKey: 'productId' });
+Taxe.hasMany(models.Product, { foreignKey: 'taxeId' });
 ```

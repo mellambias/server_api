@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
             },
             customerId: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
             },
             fingerprintId: {
                 type: DataTypes.INTEGER,

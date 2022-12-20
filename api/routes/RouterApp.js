@@ -14,6 +14,7 @@ class RouterApp {
                 const data = await this.controler.findAll(req.query);
                 res.status(200).send(data);
             } catch (error) {
+                console.log(error);
                 res.status(400).send(`${error.message}`);
             }
         });
@@ -23,6 +24,7 @@ class RouterApp {
                 const data = await this.controler.findOne(req.params.id);
                 res.status(200).send(data);
             } catch (error) {
+                console.log(error);
                 if (error instanceof ControlerException) {
                     res.status(error.status).send(error.message);
                 } else {
@@ -37,6 +39,7 @@ class RouterApp {
                 const newElement = await this.controler.create(data);
                 res.status(200).send(newElement);
             } catch (error) {
+                console.log(error);
                 res.status(400).send(error.message);
             }
         });
@@ -50,6 +53,7 @@ class RouterApp {
                 );
                 res.status(200).send(data);
             } catch (error) {
+                console.log(error);
                 res.status(400).send(error.message);
             }
         });
@@ -63,6 +67,7 @@ class RouterApp {
                 );
                 res.status(200).send(data);
             } catch (error) {
+                console.log(error);
                 res.status(error.status).send(error.message);
             }
         });
@@ -73,6 +78,7 @@ class RouterApp {
                 const data = await this.controler.deleteOne(req.params.id);
                 res.status(200).send(data);
             } catch (error) {
+                console.log(error);
                 if (error instanceof ControlerException) {
                     res.status(error.status).send(error.message);
                 } else {

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            RefundId: {
+            refundId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     );
     RefundDetail.associate = models => {
         // associations can be defined here
-        RefundDetail.belongsTo(models.Refund, { foreignKey: 'RefundId' });
+        RefundDetail.belongsTo(models.Refund, { foreignKey: 'refundId' });
         RefundDetail.belongsTo(models.Product, { foreignKey: 'productId' });
     };
     return RefundDetail;

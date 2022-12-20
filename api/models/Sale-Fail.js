@@ -17,23 +17,19 @@ module.exports = (sequelize, DataTypes) => {
             customerId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: true,
             },
             shoppingCartId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: true,
             },
             errorCode: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: true,
             },
 
             errorMessage: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                defaultValue: true,
             },
         },
         { sequelize, paranoid: true }
