@@ -14,19 +14,13 @@ app.use(express.json());
 (async function serverInit(sequelize) {
     try {
         // comprueba si podemos acceder a la base de datos
-        // console.log('Estableciendo conexión con el SGDB:');
         await sequelize.authenticate();
-        // console.log('- Conexión establecida con éxito.');
         /*   en desarrollo sincronizamos la base de datos con los modelos
          *   en producción se utilizan las migraciones para sincronizar la base de datos
          */
         if (ENV === 'development') {
-            // console.log('- Sincronizando tablas y relaciones');
-            await db.sequelize.sync({ update: true });
-            // console.log('- Ok, tablas sincronizadas');
+            await db.sequelize.sync({ force: true });
         }
-        // console.log('Configurando servidor HTTP:');
-        // config preprocessors request
     } catch (error) {
         console.error('%s', error.message);
     }
@@ -34,10 +28,7 @@ app.use(express.json());
 try {
     // endpoint controllers
     // console.log('- Configurando enrutadores');
-    const contact = new RouterApp(db.Contact);
-    app.use('/api/admin/contact', (req, res) => {
-        res.status(200).json({});
-    });
+    app.use('/api/admin/contact', new RouterApp(db.Contact));
     app.use('/api/admin/customer', new RouterApp(db.Customer));
     app.use('/api/admin/fingerprints', new RouterApp(db.Fingerprints));
     app.use('/api/admin/image-resized', new RouterApp(db.ImageResized));

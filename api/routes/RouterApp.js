@@ -37,7 +37,7 @@ class RouterApp {
             const data = req.body;
             try {
                 const newElement = await this.controler.create(data);
-                res.status(200).send(newElement);
+                res.status(200).json(newElement);
             } catch (error) {
                 console.log(error);
                 res.status(400).send(error.message);

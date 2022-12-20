@@ -4,9 +4,9 @@
     "description": "API con nodejs/Express sequelize y  Mysql",
     "main": "index.js",
     "scripts": {
-        "test": "jest",
+        "test": "jest --detectOpenHandles",
         "test.watch": "npm run test -- --watch --detectOpenHandles",
-        "install": "cd ./api/&& npx sequelize init",
+        "init.sequelize": "cd ./api/&& npx sequelize init",
         "dev": "nodemon server.js"
     },
     "repository": {
@@ -38,4 +38,3 @@
         "sequelize": "^6.27.0"
     }
 }
-

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             message: { type: DataTypes.TEXT, allowNull: false },
             fingerprintId: {
                 type: DataTypes.INTEGER,
-                allowNull: false,
+                allowNull: true,
             },
         },
         { sequelize, paranoid: true }
