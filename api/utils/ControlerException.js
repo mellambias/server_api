@@ -19,6 +19,10 @@ class ControlerException {
         debug.nameFuncion = frame.split(' ')[5];
         return debug;
     }
+
+    get message() {
+        return this.message;
+    }
 }
 
 module.exports = ControlerException;

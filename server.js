@@ -19,7 +19,7 @@ app.use(express.json());
          *   en producción se utilizan las migraciones para sincronizar la base de datos
          */
         if (ENV === 'development') {
-            await db.sequelize.sync({ force: true });
+            // await db.sequelize.sync({ alter: true });
         }
     } catch (error) {
         console.error('%s', error.message);
@@ -30,7 +30,7 @@ try {
     // console.log('- Configurando enrutadores');
     app.use('/api/admin/contact', new RouterApp(db.Contact));
     app.use('/api/admin/customer', new RouterApp(db.Customer));
-    app.use('/api/admin/fingerprints', new RouterApp(db.Fingerprints));
+    app.use('/api/admin/fingerprint', new RouterApp(db.Fingerprint));
     app.use('/api/admin/image-resized', new RouterApp(db.ImageResized));
     app.use('/api/admin/image-setting', new RouterApp(db.ImageSetting));
     app.use('/api/admin/language', new RouterApp(db.Language));
@@ -41,8 +41,8 @@ try {
     app.use('/api/admin/products-category', new RouterApp(db.ProductsCategory));
     app.use('/api/admin/refund-detail', new RouterApp(db.RefundDetail));
     app.use('/api/admin/refund', new RouterApp(db.Refund));
-    app.use('/api/admin/sale-detail', new RouterApp(db.SailDetail));
-    app.use('/api/admin/sale-fail', new RouterApp(db.SailFail));
+    app.use('/api/admin/sale-detail', new RouterApp(db.SaleDetail));
+    app.use('/api/admin/sale-fail', new RouterApp(db.SaleFail));
     app.use('/api/admin/sale', new RouterApp(db.Sale));
     app.use(
         '/api/admin/shopping-cart-detail',

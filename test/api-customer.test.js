@@ -1,6 +1,10 @@
 const request = require('supertest');
 const app = require('../server');
+const db = require('../api/models');
 
+beforeAll(async () => {
+    await db.sequelize.sync({ force: true });
+});
 const customer = {
     name: 'Antonio',
     surnames: 'Recio Mata Moros',

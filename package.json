@@ -4,7 +4,7 @@
     "description": "API con nodejs/Express sequelize y  Mysql",
     "main": "index.js",
     "scripts": {
-        "test": "jest --detectOpenHandles",
+        "test": "jest --detectOpenHandles --runInBand",
         "test.watch": "npm run test -- --watch --detectOpenHandles",
         "init.sequelize": "cd ./api/&& npx sequelize init",
         "dev": "nodemon server.js"

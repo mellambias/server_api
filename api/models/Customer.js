@@ -16,12 +16,47 @@ module.exports = (sequelize, DataTypes) => {
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
-            surnames: { type: DataTypes.STRING, allowNull: false },
-            phone: { type: DataTypes.STRING(20), allowNull: false },
-            email: { type: DataTypes.STRING, allowNull: false },
-            town: { type: DataTypes.STRING, allowNull: false },
-            postalCode: { type: DataTypes.STRING, allowNull: false },
+            surnames: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            phone: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isMobilePhone: true,
+                },
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isEmail: true,
+                },
+            },
+            town: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            postalCode: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
             address: { type: DataTypes.STRING, allowNull: false },
         },
         { sequelize, paranoid: true }

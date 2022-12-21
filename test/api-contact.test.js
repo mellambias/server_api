@@ -3,8 +3,6 @@ const app = require('../server');
 const db = require('../api/models');
 const Controler = require('../api/controllers/Controller');
 
-const customerCtl = new Controler(db.customer);
-const fingerprintCtl = new Controler(db.Fingerprint);
 const customer = {
     name: 'Antonio',
     surnames: 'Recio Mata Moros',
@@ -14,27 +12,30 @@ const customer = {
     postalCode: '01600',
     address: 'Calle Ave del paraiso',
 };
-const [customerId] = customerCtl.create(customer);
-const [fingerprint] = fingerprintCtl.create({
-    customerId,
-    fingerprint: 'asdasdasdasd',
-});
-
-const contact = {
+let contact = {
     name: 'Antonio',
     surnames: 'Recio Mata Moros',
     phone: '661259824',
     email: 'recio@mariscos.com',
     message: 'Si tiene una cena elegante',
-    fingerprint,
 };
+beforeAll(async () => {
+    await db.sequelize.sync({ force: true });
+    const customerCtl = new Controler(db.Customer);
+    const fingerprintCtl = new Controler(db.Fingerprint);
+    const newCustomer = await customerCtl.create(customer);
+    const newFingerprint = await fingerprintCtl.create({
+        customerId: newCustomer.id,
+        fingerprint: 'asdasdasdasd',
+    });
+    contact.fingerprintId = newFingerprint.fingerprintId;
+});
 
 describe('Api test contact', () => {
     test('GET /contact', async () => {
         const response = await request(app)
             .get('/api/admin/contact')
             .set('Accept', 'application/json');
-        console.log(response.body);
         expect(response.body).toEqual([]);
         expect(response.body).toHaveLength(0);
         expect(response.statusCode).toBe(200);
@@ -49,7 +50,7 @@ describe('Api test contact', () => {
         expect(response.body.phone).toEqual(contact.phone);
         expect(response.body.email).toEqual(contact.email);
         expect(response.body.message).toEqual(contact.message);
-        expect(response.body.fingerprint).toEqual(contact.fingerprint);
+        expect(response.body.fingerprintId).toEqual(contact.fingerprintId);
         expect(response.statusCode).toBe(200);
     });
     test('PUT /contact/1', async () => {
@@ -63,7 +64,7 @@ describe('Api test contact', () => {
         expect(response.body.phone).toEqual(contact.phone);
         expect(response.body.email).toEqual(contact.email);
         expect(response.body.message).toEqual(contact.message);
-        expect(response.body.fingerprint).toEqual(contact.fingerprint);
+        expect(response.body.fingerprintId).toEqual(contact.fingerprintId);
         expect(response.statusCode).toBe(200);
     });
     test('PATCH /contact/1', async () => {
@@ -76,7 +77,7 @@ describe('Api test contact', () => {
         expect(response.body.phone).toEqual(contact.phone);
         expect(response.body.email).toEqual(contact.email);
         expect(response.body.message).toEqual(contact.message);
-        expect(response.body.fingerprint).toEqual(contact.fingerprint);
+        expect(response.body.fingerprintId).toEqual(contact.fingerprintId);
         expect(response.statusCode).toBe(200);
     });
     test('GET /contact/1', async () => {
@@ -89,7 +90,7 @@ describe('Api test contact', () => {
         expect(response.body.phone).toEqual(contact.phone);
         expect(response.body.email).toEqual(contact.email);
         expect(response.body.message).toEqual(contact.message);
-        expect(response.body.fingerprint).toEqual(contact.fingerprint);
+        expect(response.body.fingerprintId).toEqual(contact.fingerprintId);
         expect(response.statusCode).toBe(200);
     });
     test('GET /contact?q=name:nuevoNombre&c=name', async () => {

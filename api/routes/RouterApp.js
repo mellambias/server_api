@@ -76,7 +76,7 @@ class RouterApp {
         this.router.delete('/:id', async (req, res) => {
             try {
                 const data = await this.controler.deleteOne(req.params.id);
-                res.status(200).send(data);
+                res.status(200).json(data);
             } catch (error) {
                 console.log(error);
                 if (error instanceof ControlerException) {

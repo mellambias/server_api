@@ -1,5 +1,6 @@
 const ControlerException = require('../utils/ControlerException');
 const { ValidationError, Op } = require('sequelize');
+const ValidateExceptions = require('../utils/ValidateExceptions');
 
 /*
  *   Clase controladora
@@ -14,11 +15,15 @@ class Controller {
         try {
             return await this.model.create(data);
         } catch (error) {
-            throw new ControlerException(
-                'Problemas al crear el registro',
-                404,
-                error
-            );
+            if (error instanceof ValidationError) {
+                throw new ValidateExceptions(error);
+            } else {
+                throw new ControlerException(
+                    'Problemas al crear el registro',
+                    404,
+                    error
+                );
+            }
         }
     }
     async findAll(options = {}) {
@@ -39,11 +44,15 @@ class Controller {
 
             return await this.model.findAll(params);
         } catch (error) {
-            throw new ControlerException(
-                'Recurso no disponible',
-                404,
-                error.message
-            );
+            if (error instanceof ValidationError) {
+                throw new ValidateExceptions(error);
+            } else {
+                throw new ControlerException(
+                    'Recurso no disponible',
+                    404,
+                    error.message
+                );
+            }
         }
     }
     async findOne(id) {
@@ -69,13 +78,13 @@ class Controller {
             return await current.save();
         } catch (error) {
             if (error instanceof ValidationError) {
+                throw new ValidateExceptions(error);
+            } else {
                 throw new ControlerException(
                     'No se puede sustituir el recurso',
                     406,
                     error.message
                 );
-            } else {
-                throw error;
             }
         }
     }
@@ -86,20 +95,28 @@ class Controller {
             return await actual.update(value);
         } catch (error) {
             if (error instanceof ValidationError) {
+                throw new ValidateExceptions(error);
+            } else {
                 throw new ControlerException(
                     'Problemas con la actualización',
                     405,
                     error.message
                 );
-            } else {
-                throw error;
             }
         }
     }
     async deleteOne(id) {
         try {
             const actual = await this.findOne(id);
-            return await actual.destroy();
+            if (actual instanceof this.model) {
+                return await actual.destroy();
+            } else {
+                throw new ControlerException(
+                    'registro a borrar no encontrado',
+                    405,
+                    error
+                );
+            }
         } catch (error) {
             throw new ControlerException(
                 'Problemas al borrar el registro',

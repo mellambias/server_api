@@ -13,10 +13,32 @@ module.exports = (sequelize, DataTypes) => {
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
-            surnames: { type: DataTypes.STRING, allowNull: false },
-            phone: { type: DataTypes.STRING(20), allowNull: false },
-            email: { type: DataTypes.STRING, allowNull: false },
+            surnames: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            phone: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isMobilePhone: true,
+                },
+            },
+            email: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    isEmail: true,
+                },
+            },
             message: { type: DataTypes.TEXT, allowNull: false },
             fingerprintId: {
                 type: DataTypes.INTEGER,

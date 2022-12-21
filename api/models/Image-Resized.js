@@ -19,18 +19,31 @@ module.exports = (sequelize, DataTypes) => {
             title: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             alt: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             path: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isUrl: true,
+                },
             },
             entity: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             entityId: {
                 type: DataTypes.INTEGER,
@@ -39,39 +52,76 @@ module.exports = (sequelize, DataTypes) => {
             languageAlias: {
                 type: DataTypes.STRING(2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             filename: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             content: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             mimeType: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isMimeType: true,
+                },
             },
             grid: {
                 type: DataTypes.ENUM,
                 values: ['desktop', 'mobile', 'preview'],
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isIn: [['desktop', 'mobile', 'preview']],
+                },
             },
             sizeBytes: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
             widthPx: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
             heightPx: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
             quality: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
         },
         { sequelize, paranoid: true }
