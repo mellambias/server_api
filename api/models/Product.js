@@ -13,19 +13,34 @@ module.exports = (sequelize, DataTypes) => {
             categoryId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-            },
-            name: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            price: {
-                type: DataTypes.DECIMAL(6, 2).UNSIGNED,
+                validate: {
+                    notEmpty: true,
+                },
             },
             taxeId: {
                 type: DataTypes.INTEGER,
             },
+            name: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            price: {
+                type: DataTypes.DECIMAL(6, 2).UNSIGNED,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                    min: 0,
+                },
+            },
+
             outstanding: {
                 type: DataTypes.BOOLEAN,
+                validate: {
+                    isIn: [[true, false]],
+                },
             },
         },
         { sequelize, paranoid: true }

@@ -13,10 +13,16 @@ module.exports = (sequelize, DataTypes) => {
             customerId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             fingerprint: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
         },
         { sequelize, paranoid: true }

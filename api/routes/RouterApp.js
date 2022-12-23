@@ -6,20 +6,22 @@ const corsOptions = require('../utils/serverCors');
 
 class RouterApp {
     router = Router();
-    constructor(model, controllerClass = Controller) {
+    middlewares = [];
+    constructor(model, controllerClass = Controller, middlewares = []) {
         this.controler = new controllerClass(model);
+        this.middlewares = middlewares;
         // obtener todos los recursos
-        this.router.get('/', async (req, res) => {
+        this.router.get('/', this.middlewares, async (req, res) => {
             try {
                 const data = await this.controler.findAll(req.query);
-                res.status(200).send(data);
+                res.status(200).json(data);
             } catch (error) {
                 console.log(error);
                 res.status(400).send(`${error.message}`);
             }
         });
         //recupera informacion de un recurso por su id
-        this.router.get('/:id', async (req, res) => {
+        this.router.get('/:id', this.middlewares, async (req, res) => {
             try {
                 const data = await this.controler.findOne(req.params.id);
                 res.status(200).send(data);
@@ -33,7 +35,7 @@ class RouterApp {
             }
         });
         // crear un nuevo recurso
-        this.router.post('/', async (req, res) => {
+        this.router.post('/', this.middlewares, async (req, res) => {
             const data = req.body;
             try {
                 const newElement = await this.controler.create(data);
@@ -45,13 +47,13 @@ class RouterApp {
         });
         // sustituye un recurso por otro.
         this.router.options('/:id', cors(corsOptions));
-        this.router.put('/:id', async (req, res) => {
+        this.router.put('/:id', this.middlewares, async (req, res) => {
             try {
                 const data = await this.controler.updateOne(
                     req.params.id,
                     req.body
                 );
-                res.status(200).send(data);
+                res.status(200).json(data);
             } catch (error) {
                 console.log(error);
                 res.status(400).send(error.message);
@@ -59,13 +61,13 @@ class RouterApp {
         });
         // modifica campos de un recurso.
         this.router.options('/:id', cors(corsOptions));
-        this.router.patch('/:id', async (req, res) => {
+        this.router.patch('/:id', this.middlewares, async (req, res) => {
             try {
                 const data = await this.controler.patchOne(
                     req.params.id,
                     req.body
                 );
-                res.status(200).send(data);
+                res.status(200).json(data);
             } catch (error) {
                 console.log(error);
                 res.status(error.status).send(error.message);
@@ -73,7 +75,7 @@ class RouterApp {
         });
         // elimina un recurso.
         this.router.options('/:id', cors(corsOptions));
-        this.router.delete('/:id', async (req, res) => {
+        this.router.delete('/:id', this.middlewares, async (req, res) => {
             try {
                 const data = await this.controler.deleteOne(req.params.id);
                 res.status(200).json(data);
@@ -87,6 +89,16 @@ class RouterApp {
             }
         });
         return this.router;
+    }
+
+    get router() {
+        return this.router;
+    }
+    get middlewares() {
+        return this.middlewares;
+    }
+    set middlewares(middlewares) {
+        this.middlewares = middlewares;
     }
 }
 module.exports = RouterApp;

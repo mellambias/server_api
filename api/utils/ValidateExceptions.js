@@ -16,6 +16,14 @@ class ValidateExceptions {
                 ].hasOwnProperty(idioma)
                     ? errorList[validationErrorItem.validatorKey][idioma]
                     : validationErrorItem.message;
+                let params = '';
+                validationErrorItem.validatorArgs.forEach(element => {
+                    if (![undefined, true].includes(element))
+                        params += element + ' ';
+                });
+                errors[validationErrorItem.path] += ' ' + params;
+                errors[validationErrorItem.path] =
+                    errors[validationErrorItem.path].trim();
             } else {
                 errors[validationErrorItem.path] = validationErrorItem.message;
             }

@@ -11,10 +11,10 @@ module.exports = (sequelize, DataTypes) => {
                 primaryKey: true,
             },
             imageOriginalId: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
             },
             imageConfigurationId: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
             },
             title: {
                 type: DataTypes.STRING,

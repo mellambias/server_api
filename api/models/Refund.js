@@ -13,27 +13,49 @@ module.exports = (sequelize, DataTypes) => {
             customerId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             paymentMethodId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             saleId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             reference: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             totalPrice: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
             priceBaseTotal: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                    min: 0,
+                },
             },
             priceVatTotal: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                    min: 0,
+                },
             },
             issueDate: { type: DataTypes.DATEONLY, allowNull: false },
             issueTime: { type: DataTypes.TIME, allowNull: false },

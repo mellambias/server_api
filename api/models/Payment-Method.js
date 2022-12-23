@@ -13,10 +13,17 @@ module.exports = (sequelize, DataTypes) => {
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             visible: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isIn: [[true, false]],
+                },
             },
         },
         { sequelize, paranoid: true }

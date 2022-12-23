@@ -13,10 +13,16 @@ module.exports = (sequelize, DataTypes) => {
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             alias: {
                 type: DataTypes.STRING(2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
         },
         { sequelize, paranoid: true }

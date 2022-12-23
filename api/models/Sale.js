@@ -25,26 +25,76 @@ module.exports = (sequelize, DataTypes) => {
             reference: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
-            totalPrice: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
+            totalPrice: {
+                type: DataTypes.DECIMAL(10, 2),
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                },
+            },
             priceBaseTotal: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                },
             },
             priceVatTotal: {
                 type: DataTypes.DECIMAL(10, 2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                },
             },
             issueDate: { type: DataTypes.DATEONLY, allowNull: false },
             issueTime: { type: DataTypes.DATE, allowNull: false },
             amount: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
-            price: { type: DataTypes.DECIMAL(6, 2), allowNull: false },
-            unitMesasure: { type: DataTypes.STRING, allowNull: false },
-            productName: { type: DataTypes.STRING, allowNull: false },
-            vatType: { type: DataTypes.INTEGER, allowNull: false },
+            price: {
+                type: DataTypes.DECIMAL(6, 2),
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                },
+            },
+            unitMesasure: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            productName: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            vatType: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
+            },
         },
         { sequelize, paranoid: true }
     );

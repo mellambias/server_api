@@ -13,22 +13,38 @@ module.exports = (sequelize, DataTypes) => {
             languageAlias: {
                 type: DataTypes.STRING(2),
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             entity: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             entityKey: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                },
             },
             key: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
             value: {
                 type: DataTypes.TEXT,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
         },
         { sequelize, paranoid: true }

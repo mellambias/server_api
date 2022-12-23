@@ -18,13 +18,16 @@ const errorList = {
         es: 'No es un tipo Mime valido',
     },
     isIn: {
-        es: 'Valor del campo no permitido',
+        es: 'Valor del campo ha de ser:',
     },
     isInt: {
         es: 'El valor tiene que ser entero',
     },
     min: {
-        es: 'el valor ha de ser mayor',
+        es: 'el valor ha de ser mayor que',
+    },
+    len: {
+        es: 'La longitud del campo ha de estar entre',
     },
 };
 module.exports = errorList;

@@ -25,11 +25,19 @@ module.exports = (sequelize, DataTypes) => {
             errorCode: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
 
             errorMessage: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
             },
         },
         { sequelize, paranoid: true }

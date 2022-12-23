@@ -13,11 +13,19 @@ module.exports = (sequelize, DataTypes) => {
             type: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                },
             },
             valid: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: true,
+                validate: {
+                    notEmpty: true,
+                    isIn: [[true, false]],
+                },
             },
         },
         { sequelize, paranoid: true }

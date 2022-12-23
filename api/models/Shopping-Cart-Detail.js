@@ -22,15 +22,44 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
                 defaultValue: 1,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                    min: 0,
+                },
             },
             price: {
                 type: DataTypes.DECIMAL(6, 2),
                 allowNull: false,
                 defaultValue: 1,
+                validate: {
+                    notEmpty: true,
+                    isDecimal: true,
+                    min: 0,
+                },
             },
-            unitMesasure: { type: DataTypes.STRING, allowNull: false },
-            productName: { type: DataTypes.STRING, allowNull: false },
-            vatType: { type: DataTypes.INTEGER, allowNull: false },
+            unitMesasure: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            productName: {
+                type: DataTypes.STRING,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                },
+            },
+            vatType: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    isInt: true,
+                },
+            },
         },
         { sequelize, paranoid: true }
     );

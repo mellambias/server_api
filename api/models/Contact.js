@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
+            fingerprintId: {
+                type: DataTypes.INTEGER,
+                allowNull: true,
+            },
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
@@ -39,10 +43,13 @@ module.exports = (sequelize, DataTypes) => {
                     isEmail: true,
                 },
             },
-            message: { type: DataTypes.TEXT, allowNull: false },
-            fingerprintId: {
-                type: DataTypes.INTEGER,
-                allowNull: true,
+            message: {
+                type: DataTypes.TEXT,
+                allowNull: false,
+                validate: {
+                    notEmpty: true,
+                    len: [20, 500],
+                },
             },
         },
         { sequelize, paranoid: true }
