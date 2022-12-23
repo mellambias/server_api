@@ -10,6 +10,7 @@ class RouterApp {
     constructor(model, controllerClass = Controller, middlewares = []) {
         this.controler = new controllerClass(model);
         this.middlewares = middlewares;
+        this.foo = 'bar';
         // obtener todos los recursos
         this.router.get('/', this.middlewares, async (req, res) => {
             try {

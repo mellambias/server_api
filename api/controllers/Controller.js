@@ -55,6 +55,24 @@ class Controller {
             }
         }
     }
+    async find(opciones) {
+        try {
+            return await this.model.findOne({
+                where: opciones,
+            });
+        } catch (error) {
+            if (error instanceof ValidationError) {
+                throw new ValidateExceptions(error);
+            } else {
+                throw new ControlerException(
+                    'Recurso no disponible',
+                    404,
+                    error.message
+                );
+            }
+        }
+    }
+
     async findOne(id) {
         if (!id) throw new ControlerException('Falta el identificador', 400);
         try {

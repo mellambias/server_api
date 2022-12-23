@@ -29,5 +29,14 @@ const errorList = {
     len: {
         es: 'La longitud del campo ha de estar entre',
     },
+    isTime: {
+        es: 'El formato de la hora es incorrecto',
+    },
+    isNif: {
+        es: 'El formato del NIF es incorrecto',
+    },
+    isNifLong: {
+        es: 'El formato del NIF es incorrecto',
+    },
 };
 module.exports = errorList;

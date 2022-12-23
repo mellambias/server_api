@@ -1,7 +1,7 @@
 const db = require('./api/models');
 const express = require('express');
 const RouterApp = require('./api/routes/RouterApp');
-const RouterPaymentMethod = require('./api/routes/Payment-Method');
+const UserSignin = require('./api/routes/UserSignin');
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(express.json());
          *   en producción se utilizan las migraciones para sincronizar la base de datos
          */
         if (ENV === 'development') {
-            // await db.sequelize.sync({ alter: true });
+            // await db.sequelize.sync({ force: true });
         }
     } catch (error) {
         console.error('%s', error.message);
@@ -28,6 +28,7 @@ app.use(express.json());
 try {
     // endpoint controllers
     // console.log('- Configurando enrutadores');
+    app.use('/api/admin/company', new RouterApp(db.Company));
     app.use('/api/admin/contact', new RouterApp(db.Contact));
     app.use('/api/admin/customer', new RouterApp(db.Customer));
     app.use('/api/admin/fingerprint', new RouterApp(db.Fingerprint));
@@ -51,10 +52,8 @@ try {
     app.use('/api/admin/shopping-cart', new RouterApp(db.ShoppingCart));
     app.use('/api/admin/slider', new RouterApp(db.Slider));
     app.use('/api/admin/taxes', new RouterApp(db.Taxe));
-    app.use(
-        '/api/admin/payment-method',
-        new RouterPaymentMethod(db.PaymentMethod)
-    );
+    app.use('/api/admin/users', new RouterApp(db.User));
+    app.use('/api/auth/user', new UserSignin(db.User));
 
     // default endpoint
     app.all('/', (req, res) => {
