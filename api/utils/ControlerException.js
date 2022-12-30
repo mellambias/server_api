@@ -5,7 +5,7 @@ process = require('process');
 class ControlerException {
     env = process.env.NODE_ENV || 'development';
     constructor(message, status, info = {}) {
-        this.message = message;
+        this.errorText = message;
         this.status = status;
         this.dev = this.env === 'development' ? [this.debugLine(), info] : {};
     }
@@ -21,7 +21,10 @@ class ControlerException {
     }
 
     get message() {
-        return this.message;
+        return this.errorText;
+    }
+    set message(message) {
+        this.errorText = message;
     }
 }
 

@@ -1,7 +1,12 @@
+const path = require('path');
 const db = require('./api/models');
 const express = require('express');
 const RouterApp = require('./api/routes/RouterApp');
 const UserSignin = require('./api/routes/UserSignin');
+const verifyUserToken = require('./api/middlewares/auth-jwt');
+const cookieParser = require('cookie-parser');
+const RouterAuthorization = require('./api/routes/RouterAuthorization');
+const RouterManyToMany = require('./api/routes/RouterManyToMany');
 
 const app = express();
 
@@ -10,6 +15,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+app.use(cookieParser());
+
+app.use('/', express.static(path.join(__dirname, '/public')));
 
 (async function serverInit(sequelize) {
     try {
@@ -20,6 +29,7 @@ app.use(express.json());
          */
         if (ENV === 'development') {
             // await db.sequelize.sync({ force: true });
+            // await db.sequelize.sync({ update: true });
         }
     } catch (error) {
         console.error('%s', error.message);
@@ -28,32 +38,71 @@ app.use(express.json());
 try {
     // endpoint controllers
     // console.log('- Configurando enrutadores');
-    app.use('/api/admin/company', new RouterApp(db.Company));
-    app.use('/api/admin/contact', new RouterApp(db.Contact));
-    app.use('/api/admin/customer', new RouterApp(db.Customer));
-    app.use('/api/admin/fingerprint', new RouterApp(db.Fingerprint));
-    app.use('/api/admin/image-resized', new RouterApp(db.ImageResized));
-    app.use('/api/admin/image-setting', new RouterApp(db.ImageSetting));
-    app.use('/api/admin/language', new RouterApp(db.Language));
-    app.use('/api/admin/locale', new RouterApp(db.Locale));
-    app.use('/api/admin/original-image', new RouterApp(db.OriginalImage));
-    app.use('/api/admin/payment-method', new RouterApp(db.PaymentMethod));
-    app.use('/api/admin/product', new RouterApp(db.Product));
-    app.use('/api/admin/products-category', new RouterApp(db.ProductsCategory));
-    app.use('/api/admin/refund-detail', new RouterApp(db.RefundDetail));
-    app.use('/api/admin/refund', new RouterApp(db.Refund));
-    app.use('/api/admin/sale-detail', new RouterApp(db.SaleDetail));
-    app.use('/api/admin/sale-fail', new RouterApp(db.SaleFail));
-    app.use('/api/admin/sale', new RouterApp(db.Sale));
+    app.use('/api/admin/company', new RouterApp(db.Company).router);
+    app.use('/api/admin/contact', new RouterApp(db.Contact).router);
+    app.use('/api/admin/customer', new RouterApp(db.Customer).router);
+    app.use('/api/admin/fingerprint', new RouterApp(db.Fingerprint).router);
+    app.use('/api/admin/image-resized', new RouterApp(db.ImageResized).router);
+    app.use('/api/admin/image-setting', new RouterApp(db.ImageSetting).router);
+    app.use('/api/admin/language', new RouterApp(db.Language).router);
+    app.use('/api/admin/locale', new RouterApp(db.Locale).router);
+    app.use(
+        '/api/admin/original-image',
+        new RouterApp(db.OriginalImage).router
+    );
+    app.use(
+        '/api/admin/payment-method',
+        new RouterApp(db.PaymentMethod).router
+    );
+    app.use('/api/admin/product', new RouterApp(db.Product).router);
+    app.use(
+        '/api/admin/products-category',
+        new RouterApp(db.ProductsCategory).router
+    );
+    app.use('/api/admin/refund-detail', new RouterApp(db.RefundDetail).router);
+    app.use('/api/admin/refund', new RouterApp(db.Refund).router);
+    app.use('/api/admin/rol', new RouterApp(db.Role).router);
+    app.use('/api/admin/sale-detail', new RouterApp(db.SaleDetail).router);
+    app.use('/api/admin/sale-fail', new RouterApp(db.SaleFail).router);
+    app.use('/api/admin/sale', new RouterApp(db.Sale).router);
     app.use(
         '/api/admin/shopping-cart-detail',
-        new RouterApp(db.ShoppingCartDetail)
+        new RouterApp(db.ShoppingCartDetail).router
     );
-    app.use('/api/admin/shopping-cart', new RouterApp(db.ShoppingCart));
-    app.use('/api/admin/slider', new RouterApp(db.Slider));
-    app.use('/api/admin/taxes', new RouterApp(db.Taxe));
-    app.use('/api/admin/users', new RouterApp(db.User));
-    app.use('/api/auth/user', new UserSignin(db.User));
+    app.use('/api/admin/shopping-cart', new RouterApp(db.ShoppingCart).router);
+    app.use('/api/admin/slider', new RouterApp(db.Slider).router);
+    app.use('/api/admin/taxes', new RouterApp(db.Taxe).router);
+    // //crea un usuario
+    app.use(
+        '/api/admin/users',
+        new RouterApp(db.User, {
+            get: [verifyUserToken],
+        }).router
+    );
+    app.use(
+        '/api/admin/user-rol',
+        new RouterManyToMany(db.UserRole, [
+            {
+                param: 'userName',
+                findKey: 'name',
+                primaryKey: 'id',
+                foreignKey: 'userId',
+                model: db.User,
+                path: '/usuario',
+            },
+            {
+                param: 'roleName',
+                findKey: 'roleName',
+                primaryKey: 'id',
+                foreignKey: 'roleId',
+                model: db.Role,
+                path: '/role',
+            },
+        ]).router
+    );
+
+    // //El usuario login
+    app.use('/api/auth/user', new UserSignin(db.User).router);
 
     // default endpoint
     app.all('/', (req, res) => {

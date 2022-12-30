@@ -1,13 +1,17 @@
+const Controller = require('./Controller');
 const ControlerException = require('../utils/ControlerException');
 const { ValidationError, Op } = require('sequelize');
 const ValidateExceptions = require('../utils/ValidateExceptions');
 
 /*
- *   Clase controladora
+ *   Clase controladora para relaciones de Muchos a Muchos
+ *   entre dos tablas usando una tercera
+ *
  *   utiliza el modelo inyectado
  */
-class Controller {
+class ControllerManyToMany extends Controller {
     constructor(model) {
+        super(model);
         this.model = model;
     }
 
@@ -24,6 +28,24 @@ class Controller {
                     error
                 );
             }
+        }
+    }
+    async findAllRelationRecords(primaryKey, relModel) {
+        try {
+            const records = await this.model.findAll({
+                where: primaryKey,
+                include: [{ model: relModel, through: { attributes: [] } }],
+            });
+            const relationRecords = records.reduce((result, record) => {
+                return record[relModel.getTableName()];
+            }, {});
+            return relationRecords;
+        } catch (error) {
+            throw new ControlerException(
+                'Problemas al buscar los registros',
+                404,
+                error
+            );
         }
     }
     async findAll(params = {}) {
@@ -113,18 +135,22 @@ class Controller {
             }
         }
     }
-    async deleteOne(id) {
+    async delete(params) {
         try {
-            const actual = await this.findOne(id);
-            if (actual instanceof this.model) {
-                return await actual.destroy();
-            } else {
-                throw new ControlerException(
-                    'registro a borrar no encontrado',
-                    405,
-                    error
-                );
-            }
+            console.log('(122 delete) params %o', params);
+            const records = await this.findAll({ where: params });
+            records.map(async record => {
+                if (record instanceof this.model) {
+                    return await record.destroy();
+                } else {
+                    throw new ControlerException(
+                        'registro a borrar no encontrado',
+                        405,
+                        error
+                    );
+                }
+            });
+            return records.lenght;
         } catch (error) {
             throw new ControlerException(
                 'Problemas al borrar el registro',
@@ -133,34 +159,6 @@ class Controller {
             );
         }
     }
-
-    async undoDelete(data) {
-        try {
-            const records = await this.model.findAll({
-                where: data,
-                paranoid: false,
-            });
-            records.map(async record => {
-                try {
-                    await record.restore();
-                } catch (error) {
-                    throw error;
-                }
-            });
-            return records;
-        } catch (error) {
-            if (error instanceof ValidationError) {
-                throw new ValidateExceptions(error);
-            } else {
-                throw new ControlerException(
-                    'Problemas al restaurar el registro',
-                    404,
-                    error
-                );
-            }
-        }
-    }
-
     querysToArguments(query) {
         let params = {};
 
@@ -179,4 +177,4 @@ class Controller {
         return params;
     }
 }
-module.exports = Controller;
+module.exports = ControllerManyToMany;

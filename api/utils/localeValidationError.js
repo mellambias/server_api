@@ -38,5 +38,8 @@ const errorList = {
     isNifLong: {
         es: 'El formato del NIF es incorrecto',
     },
+    not_unique: {
+        es: 'El valor ha de ser unico',
+    },
 };
 module.exports = errorList;
