@@ -25,6 +25,17 @@ class UserSigninController extends Controller {
             throw err;
         }
     }
+    async getRoles(userId) {
+        try {
+            const roles = {};
+            const user = await this.find({ id: userId });
+            const records = await user.getRoles();
+            records.map(record => (roles[record.roleName] = record.roleNumber));
+            return roles;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = UserSigninController;

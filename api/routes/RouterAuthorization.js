@@ -1,10 +1,14 @@
 /*
- * clase que extiende RouterApp
+ * clase que extiende RouterManyToMany
  * añadiendo rutas para los modelos relacionados
+ * para la autorización de acceso
  */
 const RouterApp = require('./RouterApp');
 const Controller = require('../controllers/ControllerManyToMany');
 const RouterManyToMany = require('./RouterManyToMany');
+
+const USERS = 0;
+const ROLES = 1;
 
 class RouterAuthorization extends RouterManyToMany {
     constructor(
@@ -14,7 +18,7 @@ class RouterAuthorization extends RouterManyToMany {
         controllerClass = Controller
     ) {
         super(model, entities, middlewares, controllerClass);
-        this.setMiddlewares(middlewares);
+        this.middlewares = middlewares;
         this.entities = entities;
         this.model = model;
         return this;
@@ -24,40 +28,35 @@ class RouterAuthorization extends RouterManyToMany {
 
     configRouter() {
         // Rutas que toman el primer modelo como referencia
-        console.log(`(25) ${this.entities[1].path}/:${this.entities[0].param}`);
+        console.log(
+            `(25) ${this.entities[ROLES].path}/:${this.entities[USERS].param}`
+        );
+        if (this.middlewares?.all.length) {
+            this.router.use(this.middlewares.all);
+        }
         this.router
-            .route(`${this.entities[1].path}/:${this.entities[0].param}`)
+            .route(
+                `${this.entities[ROLES].path}/:${this.entities[USERS].param}`
+            )
             .get(this.middlewares.get, async (req, res) => {
-                console.log('(76) %o', this.controler);
                 try {
-                    const controler = new RouterApp(this.entities[0].model)
-                        .controler;
-                    const datas = await controler.findAll({
-                        attributes: ['name'],
-                        where: {
-                            [this.entities[0].primaryKey]:
-                                req[this.entities[0].param],
-                        },
-                        include: [
-                            {
-                                model: this.entities[1].model,
-                                attributes: ['roleName', 'roleNumber'],
-                                through: {
-                                    attributes: [],
-                                },
-                            },
-                        ],
-                    });
-                    let result = datas.map(user => {
-                        let data = user.dataValues;
-                        let roles = {};
-                        data.Roles.forEach(role => {
-                            roles[role.roleName] = role.roleNumber;
-                        });
-                        data.Roles = roles;
-                        return data;
-                    });
-                    res.status(200).json(result);
+                    const roles = {};
+                    const controler = new Controller(
+                        this.entities[USERS].model
+                    );
+                    const primaryKey = {
+                        [this.entities[USERS].primaryKey]:
+                            req[this.entities[USERS].param],
+                    };
+                    const records = await controler.findAllRelationRecords(
+                        primaryKey,
+                        this.entities[ROLES].model
+                    );
+
+                    records.map(
+                        record => (roles[record.roleName] = record.roleNumber)
+                    );
+                    res.status(200).json(roles);
                 } catch (error) {
                     console.log(error);
                     res.status(400).send(`${error.message}`);

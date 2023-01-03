@@ -28,7 +28,7 @@ class Controller {
     }
     async findAll(params = {}) {
         try {
-            console.log('(47.controler) params %o', params);
+            console.log('(31.controler) params %o', params);
             return await this.model.findAll(params);
         } catch (error) {
             if (error instanceof ValidationError) {
@@ -44,7 +44,7 @@ class Controller {
     }
     async find(opciones) {
         try {
-            console.log('(50-Controller.js) opciones: ', opciones);
+            console.log('(47-Controller.js) opciones: ', opciones);
             return await this.model.findOne({
                 where: opciones,
             });

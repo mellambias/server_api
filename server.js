@@ -7,7 +7,8 @@ const verifyUserToken = require('./api/middlewares/auth-jwt');
 const cookieParser = require('cookie-parser');
 const RouterAuthorization = require('./api/routes/RouterAuthorization');
 const RouterManyToMany = require('./api/routes/RouterManyToMany');
-
+const ROLE_LIST = require('./api/config/roles-list');
+const verifyRoles = require('./api/middlewares/verify-jwt');
 const app = express();
 
 const ENV = process.env.NODE_ENV || 'development';
@@ -75,13 +76,13 @@ try {
     // //crea un usuario
     app.use(
         '/api/admin/users',
-        new RouterApp(db.User, {
-            get: [verifyUserToken],
+        new RouterApp(db.User, [], {
+            get: [verifyUserToken, verifyRoles(ROLE_LIST.User)],
         }).router
     );
     app.use(
         '/api/admin/user-rol',
-        new RouterManyToMany(db.UserRole, [
+        new RouterAuthorization(db.UserRole, [
             {
                 param: 'userName',
                 findKey: 'name',
@@ -113,7 +114,7 @@ try {
     });
     if (ENV != 'test') {
         // console.log('- Abriendo puerto %s', PORT);
-        app.listen(PORT, () => {
+        app.listen(PORT, async () => {
             console.log('Servidor ejecutandose en http://localhost:%s', PORT);
         });
     }

@@ -28,9 +28,16 @@ class UserSignin extends RouterApp {
             const { email, password } = req.body;
             try {
                 const user = await this.controler.signin(email, password);
+                // obtener los roles del usuario
+                const roles = await this.controler.getRoles(user.id);
                 // expiración normal entre 5 y 15 minutos (ponemos 30s para ver que sucede cuando expira)
                 const accessToken = jwt.sign(
-                    { name: user.name },
+                    {
+                        UserInfo: {
+                            name: user.name,
+                            roles: Object.values(roles),
+                        },
+                    },
                     process.env.ACCESS_TOKEN_SECRET,
                     {
                         expiresIn: '15m',
@@ -82,13 +89,20 @@ class UserSignin extends RouterApp {
                 jwt.verify(
                     refreshToken,
                     process.env.REFRESH_TOKEN_SECRET,
-                    (err, decoded) => {
-                        if (err || user.name !== decoded.name) {
+                    async (err, decoded) => {
+                        if (err || user.name !== decoded.UserInfo.name) {
                             return res.sendStatus(403);
                         }
+                        // obtener los roles del usuario
+                        const roles = await this.controler.getRoles(user.id);
                         //Envia un nuevo token de acceso
                         const accessToken = jwt.sign(
-                            { name: decoded.name },
+                            {
+                                UserInfo: {
+                                    name: user.name,
+                                    roles: Object.values(roles),
+                                },
+                            },
                             process.env.ACCESS_TOKEN_SECRET,
                             { expiresIn: '15m' }
                         );

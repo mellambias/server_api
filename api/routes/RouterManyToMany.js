@@ -16,7 +16,7 @@ class RouterManyToMany extends RouterApp {
         controllerClass = Controller
     ) {
         super(model, entities, middlewares, controllerClass);
-        this.setMiddlewares(middlewares);
+        this.middlewares = middlewares;
         this.entities = entities;
         this.configParams();
         return this;
@@ -116,10 +116,6 @@ class RouterManyToMany extends RouterApp {
                     const controler = new Controller(
                         this.entities[ENTITY_A].model
                     );
-                    // const registros = await controler.findMany(
-                    //     primaryKey,
-                    //     this.entities[ENTITY_B].model
-                    // );
                     const data = await controler.findAllRelationRecords(
                         primaryKey,
                         this.entities[ENTITY_B].model

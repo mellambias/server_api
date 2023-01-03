@@ -15,6 +15,7 @@ class RouterApp {
     ) {
         this.controler = new controllerClass(model);
         this.entities = entities;
+        this.middlewares = middlewares;
         this.setMiddlewares(middlewares);
         this.configRouter();
         return this;
@@ -117,6 +118,11 @@ class RouterApp {
         this.middlewares.put = value.put || [];
         this.middlewares.patch = value.patch || [];
         this.middlewares.delete = value.delete || [];
+        console.log(
+            'controler %o Middlewares %o',
+            this.controler,
+            this.middlewares
+        );
     }
 }
 module.exports = RouterApp;
