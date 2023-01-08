@@ -1,12 +1,16 @@
 const whitelist = require('../config/config-cors');
 module.exports = corsOptions = {
     origin: function (origin, callback) {
-        if (whitelist.indexOf(origin) !== -1) {
+        // añadimos !origin porque cuando desarrollamos en localhost, origin es undefined.
+        if (whitelist.indexOf(origin) !== -1 || !origin) {
             callback(null, true);
         } else {
             callback(
-                'No se pueden ejecutar comandos desde otro dominio (CORS)'
+                new Error(
+                    'No se pueden ejecutar comandos desde otro dominio (CORS)'
+                )
             );
         }
     },
+    optionsSuccessStatus: 200,
 };

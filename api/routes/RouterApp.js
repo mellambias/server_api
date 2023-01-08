@@ -112,17 +112,10 @@ class RouterApp {
     }
 
     setMiddlewares(value) {
-        this.middlewares.all = value.all || [];
-        this.middlewares.get = value.get || [];
-        this.middlewares.post = value.post || [];
-        this.middlewares.put = value.put || [];
-        this.middlewares.patch = value.patch || [];
-        this.middlewares.delete = value.delete || [];
-        console.log(
-            'controler %o Middlewares %o',
-            this.controler,
-            this.middlewares
-        );
+        const METHODS = ['all', 'get', 'post', 'put', 'patch', 'delete'];
+        METHODS.forEach(method => {
+            this.middlewares[method] = value[method] || [];
+        });
     }
 }
 module.exports = RouterApp;

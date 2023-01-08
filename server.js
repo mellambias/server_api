@@ -12,14 +12,15 @@ const verifyRoles = require('./api/middlewares/verify-jwt');
 const app = express();
 
 const ENV = process.env.NODE_ENV || 'development';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json()); //  cuando el payload contiene json
 
-app.use(cookieParser());
+app.use(cookieParser()); // para decodificar las cookies que se envian desde el cliente
 
-app.use('/', express.static(path.join(__dirname, '/public')));
+// sirve ficheros estaticos: css, js, img, etc
+app.use('*', express.static(path.join(__dirname, '/public')));
 
 (async function serverInit(sequelize) {
     try {
@@ -29,8 +30,8 @@ app.use('/', express.static(path.join(__dirname, '/public')));
          *   en producción se utilizan las migraciones para sincronizar la base de datos
          */
         if (ENV === 'development') {
-            // await db.sequelize.sync({ force: true });
-            // await db.sequelize.sync({ update: true });
+            // await db.sequelize.sync({ force: true }); // sincroniza la estructura de la base de datos con los modelos destruyendo los datos existentes
+            // await db.sequelize.sync({ update: true });// actualiza la esctructura de la base de datos con los modelos.
         }
     } catch (error) {
         console.error('%s', error.message);
@@ -105,13 +106,21 @@ try {
     // //El usuario login
     app.use('/api/auth/user', new UserSignin(db.User).router);
 
-    // default endpoint
-    app.all('/', (req, res) => {
-        // res.status(404).send(`Recurso no encontrado, compruebe su url`);
-        res.status(404).json({
-            message: `Recurso no encontrado, compruebe su url`,
-        });
+    // Si llega hasta aqui es porque no se ha encontrado ningun endpoint
+    app.all('*', (req, res) => {
+        res.status(404);
+        if (req.accepts('html')) {
+            // enviamos el fichero 404.html que se encuentra en el directorio views
+            //res.sendFile(path.join(__dirname, 'views', '404.html'));
+        } else if (req.accepts('json')) {
+            res.json({
+                message: `Recurso no encontrado, compruebe su url`,
+            });
+        } else {
+            res.type('txt').send(`Recurso no encontrado, compruebe su url`);
+        }
     });
+    // Cuando estamos haciendo TEST el framework crea su propio servidor
     if (ENV != 'test') {
         // console.log('- Abriendo puerto %s', PORT);
         app.listen(PORT, async () => {
