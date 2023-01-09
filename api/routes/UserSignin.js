@@ -6,6 +6,8 @@ const UserSigninController = require('../controllers/UserSigninController');
 const RouterApp = require('./RouterApp');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const cors = require('cors');
+const corsOptions = require('../utils/serverCors');
 
 class UserSignin extends RouterApp {
     constructor(
@@ -24,6 +26,7 @@ class UserSignin extends RouterApp {
         if (this.middlewares?.all.length) {
             this.router.use(this.middlewares.all);
         }
+        this.router.use(cors(corsOptions));
         this.router.post('/signin', this.middlewares.post, async (req, res) => {
             const { email, password } = req.body;
             try {

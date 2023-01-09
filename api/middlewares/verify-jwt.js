@@ -3,6 +3,7 @@
  */
 const verifyRoles = (...allowedRoles) => {
     // midleware que utiliza los parametros
+    console.log('(6 verify-jwt) usamos el middleware');
     return (req, res, next) => {
         // comprobamos que exista una petición que haya pasado la Autenticación
         if (!req?.roles) {

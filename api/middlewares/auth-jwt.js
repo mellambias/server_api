@@ -4,6 +4,7 @@ const verifyUserToken = (req, res, next) => {
     console.log('(4 auth-jwt) usamos el middleware');
     const authHeader = req.headers.authorization || req.headers.Authorization;
 
+    console.log('(7 auth-jwt) authHeader %o', authHeader);
     if (!authHeader?.startsWith('Bearer ')) {
         return res.sendStatus(401);
     }

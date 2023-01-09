@@ -31,7 +31,7 @@ app.use('*', express.static(path.join(__dirname, '/public')));
          */
         if (ENV === 'development') {
             // await db.sequelize.sync({ force: true }); // sincroniza la estructura de la base de datos con los modelos destruyendo los datos existentes
-            // await db.sequelize.sync({ update: true });// actualiza la esctructura de la base de datos con los modelos.
+            // await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
         }
     } catch (error) {
         console.error('%s', error.message);
