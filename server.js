@@ -34,7 +34,7 @@ app.use('*', express.static(path.join(__dirname, '/public')));
             // await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
         }
     } catch (error) {
-        console.error('%s', error.message);
+        console.error('(37) %s', error.message);
     }
 })(db.sequelize);
 try {

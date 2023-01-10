@@ -39,6 +39,7 @@
         "jsonwebtoken": "^9.0.0",
         "mysql2": "^2.3.3",
         "sequelize": "^6.27.0",
-        "sequelize-bcrypt": "^1.2.0"
+        "sequelize-bcrypt": "^1.2.0",
+        "ssh2": "^1.11.0"
     }
 }
