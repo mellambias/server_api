@@ -65,7 +65,10 @@ class UserSignin extends RouterApp {
                     // secure: true,
                     maxAge: 24 * 60 * 60 * 1000,
                 });
-                res.status(200).json({ accessToken });
+                res.status(200).json({
+                    accessToken,
+                    path: `api/admin/users/${user.id}`,
+                });
             } catch (error) {
                 res.status(404).send({
                     accessToken: null,

@@ -7,6 +7,7 @@ const verifyUserToken = require('./api/middlewares/auth-jwt');
 const cookieParser = require('cookie-parser');
 const RouterAuthorization = require('./api/routes/RouterAuthorization');
 const RouterManyToMany = require('./api/routes/RouterManyToMany');
+const Contact = require('./api/routes/Contact');
 const ROLE_LIST = require('./api/config/roles-list');
 const verifyRoles = require('./api/middlewares/verify-jwt');
 const app = express();
@@ -105,6 +106,7 @@ try {
 
     // //El usuario login
     app.use('/api/auth/user', new UserSignin(db.User).router);
+    app.use('/front/contact', new Contact(db.Contact).router);
 
     // Si llega hasta aqui es porque no se ha encontrado ningun endpoint
     app.all('*', (req, res) => {
