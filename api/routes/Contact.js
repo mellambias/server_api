@@ -8,6 +8,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const cors = require('cors');
 const corsOptions = require('../utils/serverCors');
+const EmailService = require('../services/email-service');
 
 class Contact extends RouterApp {
     constructor(
@@ -28,7 +29,28 @@ class Contact extends RouterApp {
         }
         this.router.use(cors(corsOptions));
         this.router.post('/', this.middlewares.post, async (req, res) => {
-            console.log(req.body);
+            const body = req.body;
+            const email = {
+                subject: 'Nuevo mensaje de un usuario',
+                content: `
+<p><strong style="font-size:1.2rem; color:blue;">${body.nombre} ${body.apellidos}</strong></p>
+Le ha enviado este mensaje :
+<pre>" ${body.mensaje} "
+<div>
+<b style="color:blue;">Responder al :</b>
+    <b>Telefono:</b> ${body.telefono}
+    <b>Correo:</b> ${body.email}
+</div>
+</pre>`,
+            };
+            new EmailService('gmail').sendEmail(
+                email,
+                ['mellambias@gmail.com'],
+                {
+                    cc: 'mellambias@gmail.com',
+                    replyTo: body.email,
+                }
+            );
             res.status(200).json(req.body);
         });
     }
