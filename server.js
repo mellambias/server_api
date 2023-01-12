@@ -10,6 +10,7 @@ const RouterManyToMany = require('./api/routes/RouterManyToMany');
 const Contact = require('./api/routes/Contact');
 const ROLE_LIST = require('./api/config/roles-list');
 const verifyRoles = require('./api/middlewares/verify-jwt');
+
 const app = express();
 
 const ENV = process.env.NODE_ENV || 'development';

@@ -1,14 +1,12 @@
 /**
- * Clase que controla la Autenticación de usuarios
+ * Rutas para los contactos
  */
 
 const Controller = require('../controllers/Controller');
 const RouterApp = require('./RouterApp');
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
 const cors = require('cors');
 const corsOptions = require('../utils/serverCors');
-const EmailService = require('../services/email-service');
+const EmailService = require('../services/gmail-service');
 
 class Contact extends RouterApp {
     constructor(
@@ -43,14 +41,10 @@ Le ha enviado este mensaje :
 </div>
 </pre>`,
             };
-            new EmailService('gmail').sendEmail(
-                email,
-                ['mellambias@gmail.com'],
-                {
-                    cc: 'mellambias@gmail.com',
-                    replyTo: body.email,
-                }
-            );
+            new EmailService().sendEmail(email, ['mellambias@gmail.com'], {
+                cc: 'mellambias@gmail.com',
+                replyTo: body.email,
+            });
             res.status(200).json(req.body);
         });
     }
