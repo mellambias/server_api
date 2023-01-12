@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+const db = require('../models');
+const Controller = require('../controllers/Controller');
 
 const smtpConfigDefault = {
     email: process.env.EMAIL,
@@ -20,6 +22,7 @@ module.exports = class EmailService {
         this.mailServiceTransport = nodemailer;
         this.email = process.env.EMAIL;
         this.config = config;
+        this.controller = new Controller(db.Email);
         // conexion con el servidor de correo
         this.transport = (async () => await this.getTransport())();
         EmailService.instance = this;
@@ -45,19 +48,36 @@ module.exports = class EmailService {
 
     async sendEmail(email, destination = this.email, options = {}) {
         const mailOptions = {
-            from: this.email,
-            to: destination ? destination : this.email,
+            from: email,
+            to: destination,
             subject: email.subject,
             html: email.content,
             ...options,
         };
         const activeTransport = await this.transport;
-        activeTransport.sendMail(mailOptions, (err, result) => {
+        activeTransport.sendMail(mailOptions, async (err, result) => {
+            const data = {
+                from: result.envelope.from,
+                to: result.envelope.to.toString(),
+                message: mailOptions.html,
+            };
             if (err) {
-                console.log(err);
+                console.log('(email-service) Error: %o', err);
+                data.isSendOk = false;
+                data.error = err;
+                try {
+                    await this.controller.create(data);
+                } catch (error) {
+                    console.log('(email-service) %o', error);
+                }
             } else {
-                // Aquí podríamos registrar en una base de datos los correos enviados
                 console.log('%o - Correo enviado - %o', new Date(), result);
+                data.isSendOk = true;
+                try {
+                    await this.controller.create(data);
+                } catch (error) {
+                    console.log('(email-service) %o', error);
+                }
             }
         });
     }

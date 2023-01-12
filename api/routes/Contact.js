@@ -21,13 +21,26 @@ class Contact extends RouterApp {
         return this;
     }
     configRouter() {
-        console.log('Configurando UserSignin %o', this.controler);
+        console.log('Configurando %o', this.controler);
         if (this.middlewares?.all.length) {
             this.router.use(this.middlewares.all);
         }
         this.router.use(cors(corsOptions));
         this.router.post('/', this.middlewares.post, async (req, res) => {
             const body = req.body;
+            const data = {
+                name: body.nombre,
+                surnames: body.apellidos,
+                phone: body.telefono,
+                email: body.email,
+                message: body.mensaje,
+            };
+            try {
+                await this.controler.create(data);
+            } catch (error) {
+                console.log(error);
+                res.status(400).send(error.message);
+            }
             const email = {
                 subject: 'Nuevo mensaje de un usuario',
                 content: `
