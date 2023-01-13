@@ -21,7 +21,7 @@ class GmailService extends EmailService {
         // console.log('nueva instancia GmailService');
 
         this.email = config.user;
-        this.transport = (async () => await this.getTransport())();
+        this.transport = async () => await this.getTransport();
         GmailService.instance = this;
         return this;
     }

@@ -24,7 +24,7 @@ module.exports = class EmailService {
         this.config = config;
         this.controller = new Controller(db.Email);
         // conexion con el servidor de correo
-        this.transport = (async () => await this.getTransport())();
+        this.transport = async () => await this.getTransport();
         EmailService.instance = this;
         return this;
     }
@@ -46,15 +46,14 @@ module.exports = class EmailService {
         }
     }
 
-    async sendEmail(email, destination = this.email, options = {}) {
+    // async sendEmail(email, destination = this.email, options = {})
+    async sendEmail(from, options = {}, to = this.email) {
         const mailOptions = {
-            from: email,
-            to: destination,
-            subject: email.subject,
-            html: email.content,
+            from: from,
+            to: to,
             ...options,
         };
-        const activeTransport = await this.transport;
+        const activeTransport = await this.transport();
         activeTransport.sendMail(mailOptions, async (err, result) => {
             const data = {
                 from: result.envelope.from,
@@ -71,7 +70,7 @@ module.exports = class EmailService {
                     console.log('(email-service) %o', error);
                 }
             } else {
-                console.log('%o - Correo enviado - %o', new Date(), result);
+                // console.log('%o - Correo enviado - %o', new Date(), result);
                 data.isSendOk = true;
                 try {
                     await this.controller.create(data);

@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser');
 const RouterAuthorization = require('./api/routes/RouterAuthorization');
 const RouterManyToMany = require('./api/routes/RouterManyToMany');
 const Contact = require('./api/routes/Contact');
+const Checkout = require('./api/routes/Checkout');
 const ROLE_LIST = require('./api/config/roles-list');
 const verifyRoles = require('./api/middlewares/verify-jwt');
 
@@ -105,9 +106,12 @@ try {
         ]).router
     );
 
-    // //El usuario login
+    // El usuario login
     app.use('/api/auth/user', new UserSignin(db.User).router);
+
+    // frontRouters
     app.use('/front/contact', new Contact(db.Contact).router);
+    app.use('/front/checkout', new Checkout(db.Customer).router);
 
     // Si llega hasta aqui es porque no se ha encontrado ningun endpoint
     app.all('*', (req, res) => {
