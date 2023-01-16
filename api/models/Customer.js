@@ -1,5 +1,5 @@
 const { Model } = require('sequelize');
-
+const emailValidator = require('deep-email-validator');
 module.exports = (sequelize, DataTypes) => {
     class Customer extends Model {}
     Customer.init(
@@ -41,6 +41,13 @@ module.exports = (sequelize, DataTypes) => {
                 validate: {
                     notEmpty: true,
                     isEmail: true,
+                    emailNotValid(email) {
+                        return emailValidator.validate(email).then(data => {
+                            if (data.valid == false) {
+                                throw new Error('Tu email no parece valido');
+                            }
+                        });
+                    },
                 },
             },
             town: {

@@ -3,7 +3,7 @@ const db = require('../models');
 const Controller = require('../controllers/Controller');
 
 const smtpConfigDefault = {
-    email: process.env.EMAIL,
+    user: process.env.EMAIL,
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
     auth: {
@@ -12,7 +12,7 @@ const smtpConfigDefault = {
     },
 };
 
-module.exports = class EmailService {
+class EmailService {
     constructor(config = smtpConfigDefault) {
         if (typeof EmailService.instance === 'object') {
             // console.log('singleton EmailService');
@@ -20,7 +20,6 @@ module.exports = class EmailService {
         }
         // console.log('nueva instancia EmailService');
         this.mailServiceTransport = nodemailer;
-        this.email = process.env.EMAIL;
         this.config = config;
         this.controller = new Controller(db.Email);
         // conexion con el servidor de correo
@@ -47,37 +46,48 @@ module.exports = class EmailService {
     }
 
     // async sendEmail(email, destination = this.email, options = {})
-    async sendEmail(from, options = {}, to = this.email) {
-        const mailOptions = {
-            from: from,
-            to: to,
-            ...options,
-        };
-        const activeTransport = await this.transport();
-        activeTransport.sendMail(mailOptions, async (err, result) => {
-            const data = {
-                from: result.envelope.from,
-                to: result.envelope.to.toString(),
-                message: mailOptions.html,
+    async sendEmail(from, options = {}, to = this.config.user) {
+        try {
+            const mailOptions = {
+                from: from,
+                to: to,
+                ...options,
             };
-            if (err) {
-                console.log('(email-service) Error: %o', err);
-                data.isSendOk = false;
-                data.error = err;
-                try {
-                    await this.controller.create(data);
-                } catch (error) {
-                    console.log('(email-service) %o', error);
+            const activeTransport = await this.transport();
+            activeTransport.sendMail(mailOptions, async (err, result) => {
+                const data = {
+                    from: result.envelope.from,
+                    to: result.envelope.to.toString(),
+                    message: mailOptions.html,
+                };
+                if (err) {
+                    console.log('(email-service) Error: %o', err);
+                    data.isSendOk = false;
+                    data.error = err;
+                    try {
+                        await this.controller.create(data);
+                    } catch (error) {
+                        console.log('(email-service) %o', error);
+                    }
+                } else {
+                    // console.log('%o - Correo enviado - %o', new Date(), result);
+                    data.isSendOk = true;
+                    try {
+                        await this.controller.create(data);
+                    } catch (error) {
+                        console.log('(email-service) %o', error);
+                    }
                 }
-            } else {
-                // console.log('%o - Correo enviado - %o', new Date(), result);
-                data.isSendOk = true;
-                try {
-                    await this.controller.create(data);
-                } catch (error) {
-                    console.log('(email-service) %o', error);
-                }
-            }
-        });
+                console.log(result);
+            });
+        } catch (error) {
+            console.log(
+                '(85 email-service) Error: %s \n %o',
+                error.message,
+                error
+            );
+        }
     }
-};
+}
+
+module.exports = EmailService;

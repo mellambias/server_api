@@ -41,5 +41,8 @@ const errorList = {
     not_unique: {
         es: 'El valor ha de ser unico',
     },
+    emailNotValid: {
+        es: 'El correo no es valido',
+    },
 };
 module.exports = errorList;

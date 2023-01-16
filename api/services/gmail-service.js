@@ -19,8 +19,6 @@ class GmailService extends EmailService {
             return GmailService.instance;
         }
         // console.log('nueva instancia GmailService');
-
-        this.email = config.user;
         this.transport = async () => await this.getTransport();
         GmailService.instance = this;
         return this;
@@ -39,7 +37,7 @@ class GmailService extends EmailService {
             return transport;
         } catch (error) {
             console.log(
-                'No se puede conectar al servidor de correo %o',
+                'No se pudo conectar al servidor de correo %o',
                 error.message
             );
         }

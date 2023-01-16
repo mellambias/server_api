@@ -39,20 +39,20 @@ class Checkout extends RouterApp {
             };
             try {
                 await this.controler.create(reqToModel);
+                const emailOptions = {
+                    subject: 'Gracias por su compra',
+                    html: `<b>Gracias por su compra!!!</b><br> Le informaremos cuando su pedido este listo para su envio.`,
+                };
+                new EmailService().sendEmail(
+                    'mellambias@gmail.com',
+                    emailOptions,
+                    reqToModel.email
+                );
+                res.status(200).json(req.body);
             } catch (error) {
-                console.log(error);
-                res.status(400).send(error.message);
+                console.log('(53 checkout) %o', error.message);
+                res.status(400).json({ message: error.message });
             }
-            const emailOptions = {
-                subject: 'Gracias por su compra',
-                html: ``,
-            };
-            new EmailService().sendEmail(
-                'mellambias@gmail.com',
-                emailOptions,
-                reqToModel.email
-            );
-            res.status(200).json(req.body);
         });
     }
 }
