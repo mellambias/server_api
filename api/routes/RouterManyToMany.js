@@ -64,11 +64,11 @@ class RouterManyToMany extends RouterApp {
     }
 
     configRouter() {
-        console.log(
-            '(67) Configurando RouterModelsLink %o %o',
-            this.controler,
-            this.entities
-        );
+        // console.log(
+        //     '(67) Configurando RouterModelsLink %o %o',
+        //     this.controler,
+        //     this.entities
+        // );
 
         if (this.middlewares?.all.length) {
             this.router.use(this.middlewares.all);

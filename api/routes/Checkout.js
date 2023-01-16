@@ -21,7 +21,7 @@ class Checkout extends RouterApp {
         return this;
     }
     configRouter() {
-        console.log('Configurando %o', this.controler);
+        // console.log('Configurando %o', this.controler);
         if (this.middlewares?.all.length) {
             this.router.use(this.middlewares.all);
         }

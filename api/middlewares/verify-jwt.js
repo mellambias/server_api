@@ -3,15 +3,15 @@
  */
 const verifyRoles = (...allowedRoles) => {
     // midleware que utiliza los parametros
-    console.log('(6 verify-jwt) usamos el middleware');
+    // console.log('(6 verify-jwt) usamos el middleware');
     return (req, res, next) => {
         // comprobamos que exista una petición que haya pasado la Autenticación
         if (!req?.roles) {
             res.sendStatus(401);
         }
         const rolesArray = [...allowedRoles];
-        console.log('(12 verifyRoles) rolesArray %o', rolesArray);
-        console.log('(13 verifyRoles) req.roles %o', req.roles);
+        // console.log('(12 verifyRoles) rolesArray %o', rolesArray);
+        // console.log('(13 verifyRoles) req.roles %o', req.roles);
         // comparamos los roles permitidos con los roles que tiene el usuario
         const result = req.roles
             .map(role => rolesArray.includes(role))

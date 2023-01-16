@@ -11,6 +11,7 @@ const Contact = require('./api/routes/Contact');
 const Checkout = require('./api/routes/Checkout');
 const ROLE_LIST = require('./api/config/roles-list');
 const verifyRoles = require('./api/middlewares/verify-jwt');
+const multer = require('multer');
 
 const app = express();
 
@@ -21,6 +22,17 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 app.use(express.json()); //  cuando el payload contiene json
 
 app.use(cookieParser()); // para decodificar las cookies que se envian desde el cliente
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'api/storage/tmp/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    },
+});
+
+const upload = multer({ storage });
 
 // sirve ficheros estaticos: css, js, img, etc
 app.use('*', express.static(path.join(__dirname, '/public')));
@@ -75,7 +87,12 @@ try {
         new RouterApp(db.ShoppingCartDetail).router
     );
     app.use('/api/admin/shopping-cart', new RouterApp(db.ShoppingCart).router);
-    app.use('/api/admin/slider', new RouterApp(db.Slider).router);
+    app.use(
+        '/api/admin/slider',
+        new RouterApp(db.Slider, [], {
+            post: [upload.fields([{ name: 'image', maxCount: 1 }])],
+        }).router
+    );
     app.use('/api/admin/taxes', new RouterApp(db.Taxe).router);
     // //crea un usuario
     app.use(
