@@ -9,15 +9,8 @@ const corsOptions = require('../utils/serverCors');
 const EmailService = require('../services/gmail-service');
 
 class Checkout extends RouterApp {
-    constructor(
-        model,
-        entities = [],
-        middlewares = {},
-        controllerClass = Controller
-    ) {
-        super(model, entities, middlewares, controllerClass);
-        this.entities = entities;
-        this.setMiddlewares(middlewares);
+    constructor(model, middlewares = {}, controllerClass = Controller) {
+        super(model, middlewares, controllerClass);
         return this;
     }
     configRouter() {

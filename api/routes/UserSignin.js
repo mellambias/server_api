@@ -12,15 +12,13 @@ const corsOptions = require('../utils/serverCors');
 class UserSignin extends RouterApp {
     constructor(
         model,
-        entities = [],
         middlewares = {},
         controllerClass = UserSigninController
     ) {
-        super(model, entities, middlewares, controllerClass);
-        this.entities = entities;
-        this.setMiddlewares(middlewares);
+        super(model, middlewares, controllerClass);
         return this;
     }
+
     configRouter() {
         // console.log('Configurando UserSignin %o', this.controler);
         if (this.middlewares?.all.length) {

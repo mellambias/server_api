@@ -18,16 +18,13 @@ class RouterAuthorization extends RouterManyToMany {
         controllerClass = Controller
     ) {
         super(model, entities, middlewares, controllerClass);
-        this.middlewares = middlewares;
-        this.entities = entities;
-        this.model = model;
         return this;
     }
-
-    // configParams()
-
-    configRouter() {
+    configRouter() {}
+    configRouterManyToMany() {
         // Rutas que toman el primer modelo como referencia
+        console.log('(->) RouterAuthorization configRouter');
+        console.log(this.entities);
         console.log(
             `(25) ${this.entities[ROLES].path}/:${this.entities[USERS].param}`
         );

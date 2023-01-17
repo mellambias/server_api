@@ -3,26 +3,34 @@ const Controller = require('../controllers/Controller');
 const ControlerException = require('../utils/ControlerException');
 const cors = require('cors');
 const corsOptions = require('../utils/serverCors');
+/**
+ * Crea un Router de aplicación
+ * @class RouterApp
+ */
 
 class RouterApp {
-    router = Router();
-    middlewares = {};
-    constructor(
-        model,
-        entities = [],
-        middlewares = {},
-        controllerClass = Controller
-    ) {
+    // router = Router();
+    // middlewares = {};
+    /**
+     * Configura un enrutador por defecto para los metodos POST, GET, PUT, PATCH y DELETE
+     * @param {Model} model - modelo primario
+     * @param {middlewares} middlewares - {verbo | all:[middelwares],}
+     * @param {Controller} controllerClass - Nombre de la clase controladora para el modelo primario
+     */
+    constructor(model, middlewares = {}, controllerClass = Controller) {
+        this.model = model;
         this.controler = new controllerClass(model);
-        this.entities = entities;
         this.middlewares = middlewares;
+        this.router = Router();
         this.setMiddlewares(middlewares);
         this.configRouter();
         return this;
     }
-
+    /**
+     * configura el router de express
+     */
     configRouter() {
-        // console.log('Configurando RouterApp  %o', this.controler);
+        console.log('Configurando RouterApp  %o', this.controler);
         if (this.middlewares?.all.length) {
             this.router.use(this.middlewares.all);
         }

@@ -89,7 +89,7 @@ try {
     app.use('/api/admin/shopping-cart', new RouterApp(db.ShoppingCart).router);
     app.use(
         '/api/admin/slider',
-        new RouterApp(db.Slider, [], {
+        new RouterApp(db.Slider, {
             post: [upload.fields([{ name: 'image', maxCount: 1 }])],
         }).router
     );
@@ -97,10 +97,11 @@ try {
     // //crea un usuario
     app.use(
         '/api/admin/users',
-        new RouterApp(db.User, [], {
+        new RouterApp(db.User, {
             get: [verifyUserToken, verifyRoles(ROLE_LIST.User)],
         }).router
     );
+    console.log('/api/admin/user-rol');
     app.use(
         '/api/admin/user-rol',
         new RouterAuthorization(db.UserRole, [
@@ -122,10 +123,10 @@ try {
             },
         ]).router
     );
-
+    console.log('/api/auth/user');
     // El usuario login
     app.use('/api/auth/user', new UserSignin(db.User).router);
-
+    console.log('/front/contact');
     // frontRouters
     app.use('/front/contact', new Contact(db.Contact).router);
     app.use('/front/checkout', new Checkout(db.Customer).router);

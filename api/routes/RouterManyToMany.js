@@ -15,14 +15,14 @@ class RouterManyToMany extends RouterApp {
         middlewares = {},
         controllerClass = Controller
     ) {
-        super(model, entities, middlewares, controllerClass);
-        this.middlewares = middlewares;
+        super(model, middlewares, controllerClass);
         this.entities = entities;
-        this.configParams();
+        console.log('configurando RouterManyToMany');
+        this.configRouterManyToMany();
         return this;
     }
-
-    configParams() {
+    configRouter() {}
+    configRouterManyToMany() {
         // configuramos los parametros de la ruta
         for (let index = 0; index < this.entities.length; index++) {
             const entity = this.entities[index];
