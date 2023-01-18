@@ -23,8 +23,6 @@ class RouterAuthorization extends RouterManyToMany {
     configRouter() {}
     configRouterManyToMany() {
         // Rutas que toman el primer modelo como referencia
-        console.log('(->) RouterAuthorization configRouter');
-        console.log(this.entities);
         console.log(
             `(25) ${this.entities[ROLES].path}/:${this.entities[USERS].param}`
         );

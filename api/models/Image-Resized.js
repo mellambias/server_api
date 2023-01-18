@@ -35,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notEmpty: true,
-                    isUrl: true,
                 },
             },
             entity: {
@@ -80,11 +79,11 @@ module.exports = (sequelize, DataTypes) => {
             },
             grid: {
                 type: DataTypes.ENUM,
-                values: ['desktop', 'mobile', 'preview'],
+                values: ['desktop', 'mobile', 'thumbnail'],
                 allowNull: false,
                 validate: {
                     notEmpty: true,
-                    isIn: [['desktop', 'mobile', 'preview']],
+                    isIn: [['desktop', 'mobile', 'thumbnail']],
                 },
             },
             sizeBytes: {

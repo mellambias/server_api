@@ -1,7 +1,11 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class OriginalImage extends Model {}
+    class OriginalImage extends Model {
+        fields() {
+            return ['id'];
+        }
+    }
     OriginalImage.init(
         {
             id: {
@@ -15,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 validate: {
                     notEmpty: true,
-                    isURL: true,
                 },
             },
             entity: {

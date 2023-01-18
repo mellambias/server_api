@@ -30,7 +30,7 @@ class RouterApp {
      * configura el router de express
      */
     configRouter() {
-        console.log('Configurando RouterApp  %o', this.controler);
+        // console.log('Configurando RouterApp  %o', this.controler);
         if (this.middlewares?.all.length) {
             this.router.use(this.middlewares.all);
         }

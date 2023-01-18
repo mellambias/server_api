@@ -6,6 +6,7 @@ const UserSignin = require('./api/routes/UserSignin');
 const verifyUserToken = require('./api/middlewares/auth-jwt');
 const cookieParser = require('cookie-parser');
 const RouterAuthorization = require('./api/routes/RouterAuthorization');
+const ImageSettingRouter = require('./api/routes/Image-config');
 const RouterManyToMany = require('./api/routes/RouterManyToMany');
 const Contact = require('./api/routes/Contact');
 const Checkout = require('./api/routes/Checkout');
@@ -60,7 +61,10 @@ try {
     app.use('/api/admin/customer', new RouterApp(db.Customer).router);
     app.use('/api/admin/fingerprint', new RouterApp(db.Fingerprint).router);
     app.use('/api/admin/image-resized', new RouterApp(db.ImageResized).router);
-    app.use('/api/admin/image-setting', new RouterApp(db.ImageSetting).router);
+    app.use(
+        '/api/admin/image-setting',
+        new ImageSettingRouter(db.ImageSetting).router
+    );
     app.use('/api/admin/language', new RouterApp(db.Language).router);
     app.use('/api/admin/locale', new RouterApp(db.Locale).router);
     app.use(
@@ -89,9 +93,15 @@ try {
     app.use('/api/admin/shopping-cart', new RouterApp(db.ShoppingCart).router);
     app.use(
         '/api/admin/slider',
-        new RouterApp(db.Slider, {
-            post: [upload.fields([{ name: 'image', maxCount: 1 }])],
-        }).router
+        new ImageSettingRouter(
+            db.Slider,
+            {
+                post: [upload.fields([{ name: 'image', maxCount: 1 }])],
+            },
+            db.OriginalImage,
+            db.ImageResized,
+            db.ImageSetting
+        ).router
     );
     app.use('/api/admin/taxes', new RouterApp(db.Taxe).router);
     // //crea un usuario
