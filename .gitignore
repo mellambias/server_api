@@ -1,3 +1,4 @@
 api/config
 node_modules
 .env
+api/storage

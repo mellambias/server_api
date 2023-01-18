@@ -136,6 +136,9 @@ class ImageService {
                                                                 console.log(
                                                                     'Registrando la imagen redimensionada'
                                                                 );
+                                                                console.log(
+                                                                    imageRedim
+                                                                );
                                                                 const toImageResized =
                                                                     {
                                                                         ...toOriginalImage,
@@ -155,6 +158,9 @@ class ImageService {
                                                                         size: imageRedim.size,
                                                                         content:
                                                                             imageRedim.format,
+                                                                        mimeType:
+                                                                            'image/' +
+                                                                            imageRedim.extensionConversion,
                                                                     };
                                                                 const redimensionCtr =
                                                                     new Controller(
