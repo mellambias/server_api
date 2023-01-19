@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class ImageSetting extends Model {}
-    ImageSetting.init(
+    class ImageConfigurations extends Model {}
+    ImageConfigurations.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -17,48 +17,13 @@ module.exports = (sequelize, DataTypes) => {
                     notEmpty: true,
                 },
             },
-            directory: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            type: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            content: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            grid: {
+            mediaQuery: {
                 type: DataTypes.ENUM,
                 values: ['desktop', 'mobile', 'thumbnail'],
                 allowNull: false,
                 validate: {
                     notEmpty: true,
                     isIn: [['desktop', 'mobile', 'thumbnail']],
-                },
-            },
-            contentAccepted: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            extensionConversion: {
-                type: DataTypes.STRING(4),
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
                 },
             },
             widthPx: {
@@ -91,8 +56,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         { sequelize, paranoid: true }
     );
-    ImageSetting.associate = models => {
+    ImageConfigurations.associate = models => {
         // associations can be defined here
+        ImageConfigurations.belongsTo(models.Image, { foreignKey: 'id' });
     };
-    return ImageSetting;
+    return ImageConfigurations;
 };

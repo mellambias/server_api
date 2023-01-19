@@ -1,8 +1,8 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-    class ImageResized extends Model {}
-    ImageResized.init(
+    class Image extends Model {}
+    Image.init(
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false,
                 primaryKey: true,
             },
-            imageOriginalId: {
+            originalFilename: {
                 type: DataTypes.INTEGER,
             },
             imageConfigurationId: {
@@ -24,13 +24,6 @@ module.exports = (sequelize, DataTypes) => {
                 },
             },
             alt: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            path: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
@@ -55,29 +48,21 @@ module.exports = (sequelize, DataTypes) => {
                     notEmpty: true,
                 },
             },
-            filename: {
+            resizedFilename: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
                     notEmpty: true,
                 },
             },
-            content: {
+            htmlElementId: {
                 type: DataTypes.STRING,
                 allowNull: false,
                 validate: {
                     notEmpty: true,
                 },
             },
-            mimeType: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isMimeType: true,
-                },
-            },
-            grid: {
+            mediaQuery: {
                 type: DataTypes.ENUM,
                 values: ['desktop', 'mobile', 'thumbnail'],
                 allowNull: false,
@@ -95,25 +80,7 @@ module.exports = (sequelize, DataTypes) => {
                     min: 0,
                 },
             },
-            widthPx: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
-            },
-            heightPx: {
-                type: DataTypes.INTEGER.UNSIGNED,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
-            },
-            quality: {
+            latency: {
                 type: DataTypes.INTEGER.UNSIGNED,
                 allowNull: false,
                 validate: {
@@ -125,8 +92,9 @@ module.exports = (sequelize, DataTypes) => {
         },
         { sequelize, paranoid: true }
     );
-    ImageResized.associate = models => {
+    Image.associate = models => {
         // associations can be defined here
+        Image.hasOne(models.ImageConfigurations, { foreignKey: 'id' });
     };
-    return ImageResized;
+    return Image;
 };

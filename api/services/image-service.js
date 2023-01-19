@@ -32,9 +32,6 @@ class ImageService {
                     'original',
                     data.originalname
                 );
-                console.log('originPath: %o', originPath);
-                console.log('targetPath: %o', targetPath);
-
                 fs.mkdir(
                     path.dirname(targetPath),
                     { recursive: true },
