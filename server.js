@@ -21,9 +21,10 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(express.json()); //  cuando el payload contiene json
-
 app.use(cookieParser()); // para decodificar las cookies que se envian desde el cliente
-
+/**
+ * configura la api de multer, para los archivos contenidos en el body
+ */
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'api/storage/tmp/');
@@ -37,7 +38,11 @@ const upload = multer({ storage });
 
 // sirve ficheros estaticos: css, js, img, etc
 app.use('*', express.static(path.join(__dirname, '/public')));
-
+/**
+ * Inicializa el servidor conectando a SGDB
+ * @method
+ * @async
+ */
 (async function serverInit(sequelize) {
     try {
         // comprueba si podemos acceder a la base de datos
@@ -47,7 +52,7 @@ app.use('*', express.static(path.join(__dirname, '/public')));
          */
         if (ENV === 'development') {
             // await db.sequelize.sync({ force: true }); // sincroniza la estructura de la base de datos con los modelos destruyendo los datos existentes
-            await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
+            // await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
         }
     } catch (error) {
         console.error('(37) %s', error.message);
