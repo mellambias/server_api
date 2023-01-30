@@ -5,60 +5,65 @@ module.exports = (sequelize, DataTypes) => {
     ImageConfigurations.init(
         {
             id: {
-                type: DataTypes.INTEGER,
                 autoIncrement: true,
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
             },
             entity: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(255),
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
+            },
+            name: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
             },
             mediaQuery: {
-                type: DataTypes.ENUM,
-                values: ['desktop', 'mobile', 'thumbnail'],
+                type: DataTypes.STRING(255),
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isIn: [['desktop', 'mobile', 'thumbnail']],
-                },
             },
             widthPx: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
             },
             heightPx: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
             },
-            quality: {
-                type: DataTypes.INTEGER,
+            createdAt: {
+                type: DataTypes.DATE,
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
+            },
+            updatedAt: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            deletedAt: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
         },
-        { sequelize, paranoid: true }
+        {
+            sequelize,
+            tableName: 'image_configurations',
+            timestamps: true,
+            paranoid: true,
+            indexes: [
+                {
+                    name: 'PRIMARY',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'id' }],
+                },
+            ],
+        }
     );
     ImageConfigurations.associate = models => {
         // associations can be defined here
-        ImageConfigurations.belongsTo(models.Image, { foreignKey: 'id' });
+        ImageConfigurations.hasMany(models.Image, {
+            as: 'images',
+            foreignKey: 'imageConfigurationId',
+        });
     };
     return ImageConfigurations;
 };

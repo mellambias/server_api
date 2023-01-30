@@ -1,201 +1,240 @@
-const fs = require('fs');
+const fs = require('fs/promises');
 const path = require('path');
 const sharp = require('sharp');
-const Controller = require('../controllers/Controller');
+const db = require('../models');
+const ImageConfiguration = db.ImageConfiguration;
+const Image = db.Image;
 
-class ImageService {
-    constructor(entity, entityId, models) {
-        this.entity = entity;
-        this.entityId = entityId;
-        this.models = models;
-        this.tempPath = 'storage/tmp';
-        this.imagePath = 'storage/image';
-    }
+module.exports = class ImageService {
+    uploadImage = async images => {
+        let result = [];
 
-    async upload(images) {
-        Object.values(images).forEach(image => {
-            image.forEach(data => {
-                console.log('19 image-service: %o', data);
-                const originPath = path.join(
-                    __dirname,
-                    '..',
-                    this.tempPath,
-                    data.originalname
-                );
-                const targetPath = path.join(
-                    __dirname,
-                    '..',
-                    this.imagePath,
-                    this.entity,
-                    `${this.entityId}`,
-                    data.fieldname,
-                    'original',
-                    data.originalname
-                );
-                fs.mkdir(
-                    path.dirname(targetPath),
-                    { recursive: true },
-                    error => {
-                        if (error) {
-                            throw new Error(error.message);
-                        }
-                        // movemos el archivo
-                        fs.rename(originPath, targetPath, error => {
-                            if (error) {
-                                throw new Error(error.message);
-                            }
-                            // registramos en el modelo originales
-                            const imageTarget = sharp(targetPath);
-                            imageTarget
-                                .metadata()
-                                .then(async metadata => {
-                                    console.log('Meta %o', metadata);
-                                    const toOriginalImage = {
-                                        path: targetPath,
-                                        entity: this.entity,
-                                        entityId: this.entityId,
-                                        languageAlias: 'es',
-                                        filename: data.originalname,
-                                        content: data.fieldname,
-                                        mimeType: data.mimetype,
-                                        sizeBytes: data.size,
-                                        widthPx: metadata.width,
-                                        heightPx: metadata.height,
-                                    };
-                                    const originalImageCtr = new Controller(
-                                        this.models.origin
-                                    );
-                                    try {
-                                        const originalImage =
-                                            await originalImageCtr.create(
-                                                toOriginalImage
-                                            );
+        for (let key in images) {
+            for (let image of images[key]) {
+                try {
+                    if (image.originalname.includes(' ')) {
+                        image.filename = image.originalname.replace(' ', '-');
+                    }
 
-                                        // Actualiza los directorios
-                                        const basePath = path.join(
+                    let oldPath = path.join(
+                        __dirname,
+                        `../storage/tmp/${image.originalname}`
+                    );
+
+                    let filename = await fs
+                        .access(
+                            path.join(
+                                __dirname,
+                                `../storage/images/gallery/original/${
+                                    path.parse(image.filename).name
+                                }.webp`
+                            )
+                        )
+                        .then(async () => {
+                            // Dar al usuario la opción de sobreescribir la imagen
+                            return `${
+                                path.parse(image.filename).name
+                            }-${new Date().getTime()}.webp`;
+                        })
+                        .catch(async () => {
+                            return `${path.parse(image.filename).name}.webp`;
+                        });
+
+                    await sharp(oldPath)
+                        .webp({ lossless: true })
+                        .toFile(
+                            path.join(
+                                __dirname,
+                                `../storage/images/gallery/original/${filename}`
+                            )
+                        );
+
+                    await sharp(oldPath)
+                        .resize(135, 135)
+                        .webp({ lossless: true })
+                        .toFile(
+                            path.join(
+                                __dirname,
+                                `../storage/images/gallery/thumbnail/${filename}`
+                            )
+                        );
+
+                    await fs.unlink(oldPath);
+
+                    result.push(filename);
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+
+        return result;
+    };
+
+    resizeImages = async (entity, entityId, images) => {
+        try {
+            for (let image in images) {
+                const imageConfigurations = await ImageConfiguration.findAll({
+                    where: {
+                        entity: entity,
+                        name: images[image].name,
+                    },
+                });
+
+                for (let imageConfiguration of imageConfigurations) {
+                    for (let file of images[image].files) {
+                        let imageResize = {};
+
+                        await fs
+                            .access(
+                                path.join(
+                                    __dirname,
+                                    `../storage/images/resized/${
+                                        path.parse(file.filename).name
+                                    }-${imageConfiguration.widthPx}x${
+                                        imageConfiguration.heightPx
+                                    }.webp`
+                                )
+                            )
+                            .then(async () => {
+                                let start = new Date().getTime();
+
+                                let stats = await fs.stat(
+                                    path.join(
+                                        __dirname,
+                                        `../storage/images/resized/${
+                                            path.parse(file.filename).name
+                                        }-${imageConfiguration.widthPx}x${
+                                            imageConfiguration.heightPx
+                                        }.webp`
+                                    )
+                                );
+                                imageResize = await sharp(
+                                    path.join(
+                                        __dirname,
+                                        `../storage/images/resized/${
+                                            path.parse(file.filename).name
+                                        }-${imageConfiguration.widthPx}x${
+                                            imageConfiguration.heightPx
+                                        }.webp`
+                                    )
+                                ).metadata();
+                                imageResize.size = stats.size;
+
+                                let end = new Date().getTime();
+
+                                imageResize.latency = end - start;
+                            })
+                            .catch(async () => {
+                                let start = new Date().getTime();
+
+                                imageResize = await sharp(
+                                    path.join(
+                                        __dirname,
+                                        `../storage/images/gallery/original/${file.filename}`
+                                    )
+                                )
+                                    .resize(
+                                        imageConfiguration.widthPx,
+                                        imageConfiguration.heightPx
+                                    )
+                                    .webp({ nearLossless: true })
+                                    .toFile(
+                                        path.join(
                                             __dirname,
-                                            '..',
-                                            this.imagePath,
-                                            this.entity,
-                                            `${this.entityId}`,
-                                            data.fieldname
-                                        );
-                                        // buscar que formato necesitamos para cada configuración
-                                        const configCtr = new Controller(
-                                            this.models.setting
-                                        );
-                                        try {
-                                            const configs =
-                                                await configCtr.findAll({
-                                                    where: {
-                                                        entity: this.entity,
-                                                    },
-                                                });
-                                            console.log(
-                                                'Configuraciones %o',
-                                                configs
-                                            );
-                                            Object.values(configs).forEach(
-                                                config => {
-                                                    const currentPath =
-                                                        path.join(
-                                                            basePath,
-                                                            config.grid
-                                                        );
-                                                    if (
-                                                        !fs.existsSync(
-                                                            currentPath
-                                                        )
-                                                    ) {
-                                                        fs.mkdirSync(
-                                                            currentPath
-                                                        );
-                                                    }
-                                                    imageTarget
-                                                        .resize(
-                                                            config.widthPx,
-                                                            config.heightPx
-                                                        )
-                                                        .webp({
-                                                            quality:
-                                                                config.quality,
-                                                        })
-                                                        .toFile(
-                                                            path.join(
-                                                                currentPath,
-                                                                path.parse(
-                                                                    data.filename
-                                                                ).name + '.webp'
-                                                            )
-                                                        )
-                                                        .then(
-                                                            async imageRedim => {
-                                                                console.log(
-                                                                    'Registrando la imagen redimensionada'
-                                                                );
-                                                                console.log(
-                                                                    imageRedim
-                                                                );
-                                                                const toImageResized =
-                                                                    {
-                                                                        ...toOriginalImage,
-                                                                        imageOriginalId:
-                                                                            originalImage.id,
-                                                                        imageConfigurationId:
-                                                                            config.id,
-                                                                        title: 'title',
-                                                                        alt: 'alt',
-                                                                        path: 'path',
-                                                                        grid: config.grid,
-                                                                        quality: 100,
-                                                                        widthPx:
-                                                                            imageRedim.width,
-                                                                        heightPx:
-                                                                            imageRedim.height,
-                                                                        size: imageRedim.size,
-                                                                        content:
-                                                                            imageRedim.format,
-                                                                        mimeType:
-                                                                            'image/' +
-                                                                            imageRedim.extensionConversion,
-                                                                    };
-                                                                const redimensionCtr =
-                                                                    new Controller(
-                                                                        this.models.resize
-                                                                    );
-                                                                try {
-                                                                    await redimensionCtr.create(
-                                                                        toImageResized
-                                                                    );
-                                                                } catch (error) {
-                                                                    throw error;
-                                                                }
-                                                            }
-                                                        )
-                                                        .catch(error => {
-                                                            console.log(
-                                                                '110- image-service error %o',
-                                                                error
-                                                            );
-                                                        });
-                                                }
-                                            );
-                                        } catch (error) {
-                                            console.log(error);
-                                        }
-                                    } catch (error) {
-                                        throw error;
-                                    }
-                                })
-                                .catch(e => {
-                                    console.log('Error %o', e);
-                                });
+                                            `../storage/images/resized/${
+                                                path.parse(file.filename).name
+                                            }-${imageConfiguration.widthPx}x${
+                                                imageConfiguration.heightPx
+                                            }.webp`
+                                        )
+                                    );
+
+                                let end = new Date().getTime();
+
+                                imageResize.latency = end - start;
+                            });
+
+                        await Image.create({
+                            imageConfigurationId: imageConfiguration.id,
+                            entityId: entityId,
+                            entity: entity,
+                            name: images[image].name,
+                            originalFilename: file.filename,
+                            resizedFilename: `${
+                                path.parse(file.filename).name
+                            }-${imageConfiguration.widthPx}x${
+                                imageConfiguration.heightPx
+                            }.webp`,
+                            title: file.title,
+                            alt: file.alt,
+                            languageAlias: file.languageAlias,
+                            mediaQuery: imageConfiguration.mediaQuery,
+                            sizeBytes: imageResize.size,
+                            latencyMs: imageResize.latency,
                         });
                     }
-                );
-            });
-        });
-    }
-}
+                }
+            }
 
-module.exports = ImageService;
+            return true;
+        } catch (error) {
+            console.log(error);
+
+            return false;
+        }
+    };
+
+    deleteImages = async filename => {
+        try {
+            await fs.unlink(
+                path.join(
+                    __dirname,
+                    `../storage/images/gallery/original/${filename}`
+                )
+            );
+            await fs.unlink(
+                path.join(
+                    __dirname,
+                    `../storage/images/gallery/thumbnail/${filename}`
+                )
+            );
+
+            // Falta borrar las imágenes redimensionadas
+
+            return 1;
+        } catch {
+            return 0;
+        }
+    };
+
+    getThumbnails = async (limit, offset) => {
+        let images = {};
+        let files = await fs.readdir(
+            path.join(__dirname, `../storage/images/gallery/thumbnail`)
+        );
+        files = files.filter(file => file !== '.gitignore');
+
+        images.filenames = await fs.readdir(
+            path.join(__dirname, `../storage/images/gallery/thumbnail`),
+            { limit: limit, offset: offset }
+        );
+        images.filenames = images.filenames.filter(
+            file => file !== '.gitignore'
+        );
+        images.count = files.length;
+
+        return images;
+    };
+
+    getImages = async (entity, entityId) => {
+        const images = await images[image].findAll({
+            where: {
+                entity: entity,
+                entityId: entityId,
+            },
+        });
+
+        return images;
+    };
+};

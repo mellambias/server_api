@@ -5,96 +5,97 @@ module.exports = (sequelize, DataTypes) => {
     Image.init(
         {
             id: {
-                type: DataTypes.INTEGER,
                 autoIncrement: true,
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
             },
-            originalFilename: {
-                type: DataTypes.INTEGER,
-            },
             imageConfigurationId: {
                 type: DataTypes.INTEGER,
-            },
-            title: {
-                type: DataTypes.STRING,
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            alt: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
-            },
-            entity: {
-                type: DataTypes.STRING,
-                allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
             },
             entityId: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
             },
-            languageAlias: {
-                type: DataTypes.STRING(2),
+            entity: {
+                type: DataTypes.STRING(255),
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
+            },
+            name: {
+                type: DataTypes.TEXT,
+                allowNull: false,
+            },
+            originalFilename: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
             },
             resizedFilename: {
-                type: DataTypes.STRING,
+                type: DataTypes.STRING(255),
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
             },
-            htmlElementId: {
-                type: DataTypes.STRING,
+            title: {
+                type: DataTypes.STRING(255),
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                },
+            },
+            alt: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+            },
+            languageAlias: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
             },
             mediaQuery: {
-                type: DataTypes.ENUM,
-                values: ['desktop', 'mobile', 'thumbnail'],
+                type: DataTypes.STRING(255),
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isIn: [['desktop', 'mobile', 'thumbnail']],
-                },
             },
             sizeBytes: {
-                type: DataTypes.INTEGER.UNSIGNED,
+                type: DataTypes.INTEGER,
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
             },
-            latency: {
-                type: DataTypes.INTEGER.UNSIGNED,
+            latencyMs: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
-                validate: {
-                    notEmpty: true,
-                    isInt: true,
-                    min: 0,
-                },
+            },
+            createdAt: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            updatedAt: {
+                type: DataTypes.DATE,
+                allowNull: false,
+            },
+            deletedAt: {
+                type: DataTypes.DATE,
+                allowNull: true,
             },
         },
-        { sequelize, paranoid: true }
+        {
+            sequelize,
+            tableName: 'images',
+            timestamps: true,
+            paranoid: true,
+            indexes: [
+                {
+                    name: 'PRIMARY',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'id' }],
+                },
+                {
+                    name: 'FK_image_resizes_image_configurations',
+                    using: 'BTREE',
+                    fields: [{ name: 'imageConfigurationId' }],
+                },
+            ],
+        }
     );
     Image.associate = models => {
         // associations can be defined here
-        Image.hasOne(models.ImageConfigurations, { foreignKey: 'id' });
+        Image.belongsTo(models.ImageConfigurations, {
+            foreignKey: 'imageConfigurationId',
+        });
     };
     return Image;
 };

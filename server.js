@@ -10,6 +10,7 @@ const ImageSettingRouter = require('./api/routes/Image-config');
 const RouterManyToMany = require('./api/routes/RouterManyToMany');
 const Contact = require('./api/routes/Contact');
 const Checkout = require('./api/routes/Checkout');
+const ControllerMenu = require('./api/controllers/ControllerMenu');
 const ROLE_LIST = require('./api/config/roles-list');
 const verifyRoles = require('./api/middlewares/verify-jwt');
 const multer = require('multer');
@@ -52,7 +53,7 @@ app.use('*', express.static(path.join(__dirname, '/public')));
          */
         if (ENV === 'development') {
             // await db.sequelize.sync({ force: true }); // sincroniza la estructura de la base de datos con los modelos destruyendo los datos existentes
-            await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
+            // await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
         }
     } catch (error) {
         console.error('(37) %s', error.message);
@@ -72,6 +73,12 @@ try {
     );
     app.use('/api/admin/language', new RouterApp(db.Language).router);
     app.use('/api/admin/locale', new RouterApp(db.Locale).router);
+    app.use(
+        '/api/admin/menu',
+        new RouterApp(db.Menu).router,
+        {},
+        ControllerMenu
+    );
     app.use(
         '/api/admin/original-image',
         new RouterApp(db.OriginalImage).router

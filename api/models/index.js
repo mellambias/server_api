@@ -30,6 +30,7 @@ fs.readdirSync(__dirname)
         );
     })
     .forEach(file => {
+        console.log(path.join(__dirname, file));
         const model = require(path.join(__dirname, file))(
             sequelize,
             Sequelize.DataTypes
@@ -39,11 +40,11 @@ fs.readdirSync(__dirname)
 
 Object.keys(db).forEach(modelName => {
     const models = ['User', 'Role', 'UserRole'];
-    if (models.includes(modelName)) {
-        if (db[modelName].associate) {
-            db[modelName].associate(db);
-        }
+    // if (models.includes(modelName)) {
+    if (db[modelName].associate) {
+        db[modelName].associate(db);
     }
+    // }
 });
 
 db.sequelize = sequelize;
