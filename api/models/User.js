@@ -37,10 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     );
     User.associate = models => {
         // associations can be defined here
-        User.hasMany(models.UserRole, { foreignKey: 'userId' });
         User.belongsToMany(models.Role, {
-            through: models.UserRole,
-            foreignKey: 'userId',
+            through: 'UserRole',
         });
     };
     useBcrypt(User, { field: 'password', rounds: 12, compare: 'authenticate' });

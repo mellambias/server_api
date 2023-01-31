@@ -178,5 +178,13 @@ class Controller {
         }
         return params;
     }
+    /**
+     * Devuelve el valor recibido
+     * @param {any} value
+     * @returns el valor recibido
+     */
+    async echo(value) {
+        return value;
+    }
 }
 module.exports = Controller;

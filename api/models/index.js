@@ -8,6 +8,7 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
+const whiteList = [];
 
 let sequelize;
 if (config.use_env_variable) {
@@ -30,21 +31,21 @@ fs.readdirSync(__dirname)
         );
     })
     .forEach(file => {
-        console.log(path.join(__dirname, file));
-        const model = require(path.join(__dirname, file))(
-            sequelize,
-            Sequelize.DataTypes
-        );
-        db[model.name] = model;
+        if (whiteList.length == 0 || whiteList.includes(file)) {
+            console.log(file);
+            const model = require(path.join(__dirname, file))(
+                sequelize,
+                Sequelize.DataTypes
+            );
+
+            db[model.name] = model;
+        }
     });
 
 Object.keys(db).forEach(modelName => {
-    const models = ['User', 'Role', 'UserRole'];
-    // if (models.includes(modelName)) {
     if (db[modelName].associate) {
         db[modelName].associate(db);
     }
-    // }
 });
 
 db.sequelize = sequelize;
