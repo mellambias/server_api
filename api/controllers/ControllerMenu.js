@@ -8,42 +8,30 @@ class ControllerMenu extends Controller {
 
     async getMenuItems(menuName = {}) {
         try {
-            const result = [];
-            const pila = [];
-            const pilaName = [];
-            let current = {};
-            let temp = {};
-            let children = [];
+            const mapChildren = new Map();
             const root = await this.model.findOne({
                 where: { name: menuName },
+                raw: true,
             });
-            current = root;
-            do {
-                pila.push(current);
-                pilaName.push(current.name);
-                do {
-                    children = await current.getChildren();
-                    if (children.length) {
-                        children.forEach(element => {
-                            pila.push(element);
-                            pilaName.push(element.name);
-                        });
-                        result.push(current.name);
-                        current = pila.pop();
-                        pilaName.pop();
-                    } else {
-                        result.push(current.name);
-                        current = pila.pop();
-                        pilaName.pop();
+            if (Object.keys(root).length) {
+                mapChildren.set(root.id, { ...root, children: [] });
+                const children = await this.model.findAll({
+                    order: [['id', 'ASC'], ['parentId'], ['order', 'ASC']],
+                    raw: true,
+                });
+                children.forEach(element => {
+                    mapChildren.set(element.id, {
+                        ...element,
+                        children: [],
+                    });
+                });
+                mapChildren.forEach((value, key, map) => {
+                    if (value?.parentId) {
+                        map.get(value.parentId).children.push(value);
                     }
-                } while (current != undefined || pila.length > 0);
-                if (pila.length != 0) {
-                    temp = pila.pop();
-                    console.log(temp.dataValues);
-                    current = pila.pop();
-                }
-            } while (current != undefined || pila.length > 1); //Si `actual` es distinto de NULL o la pila no está vacía, ir al paso 3
-            return result;
+                });
+            }
+            return mapChildren.get(root.id);
         } catch (err) {
             console.log(err);
         }
