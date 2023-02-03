@@ -68,7 +68,7 @@ class UserSignin extends RouterApp {
                     path: `api/admin/users/${user.id}`,
                 });
             } catch (error) {
-                res.status(404).send({
+                res.status(401).send({
                     accessToken: null,
                     message: error.message,
                 });
