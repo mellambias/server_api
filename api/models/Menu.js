@@ -22,6 +22,9 @@ module.exports = function (sequelize, DataTypes) {
             customUrl: {
                 type: DataTypes.STRING(255),
             },
+            controlerName: {
+                type: DataTypes.STRING(255),
+            },
             order: {
                 type: DataTypes.INTEGER,
                 defaultValue: 1,
