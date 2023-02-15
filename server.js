@@ -52,10 +52,12 @@ app.use('*', express.static(path.join(__dirname, '/public')));
          */
         if (ENV === 'development') {
             // await db.sequelize.sync({ force: true }); // sincroniza la estructura de la base de datos con los modelos destruyendo los datos existentes
+            // console.log('actualizando...');
             // await db.sequelize.sync({ update: true }); // actualiza la esctructura de la base de datos con los modelos.
         }
         // endpoint controllers
         console.log('- Configurando enrutadores');
+        app.use('/api/admin/book', new RouterApp(db.Book).router);
         app.use('/api/admin/company', new RouterApp(db.Company).router);
         app.use('/api/admin/contact', new RouterApp(db.Contact).router);
         app.use('/api/admin/customer', new RouterApp(db.Customer).router);
