@@ -45,7 +45,7 @@ class RouterApp {
                     res.status(200).json(data);
                 } catch (error) {
                     console.log(error);
-                    res.status(400).send(`${error.message}`);
+                    res.status(400).json({ error: `${error.message}` });
                 }
             })
             // crear un nuevo recurso
@@ -69,7 +69,7 @@ class RouterApp {
                 } catch (error) {
                     console.log(error);
                     if (error instanceof ControlerException) {
-                        res.status(error.status).send(error.message);
+                        res.status(error.status).send({ error: error.message });
                     } else {
                         res.status(400).send(error);
                     }
